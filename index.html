@@ -296,13 +296,6 @@
   .totalbar strong { color: var(--text); font-variant-numeric: tabular-nums; }
   .totalbar .savings { color: var(--tag-nature); }
 
-  footer {
-    padding: 1.2rem clamp(1rem, 4vw, 3rem) 2rem;
-    font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
-    color: var(--text-muted);
-  }
-
   .leaflet-popup-content-wrapper {
     background: var(--card);
     color: var(--text);
@@ -343,7 +336,6 @@
   </div>
 </div>
 
-<footer>Made for the trip — map tiles © Esri. Train numbers and times checked directly against 12306.cn; schedules can shift closer to travel, so re-confirm before booking (12306 opens ticket sales ~15 days ahead).</footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
@@ -408,10 +400,13 @@ const itineraries = {
       { id: 'zj', num: 6, name: 'Zhangjiajie', dates: 'Oct 17 – 20', tag: 'nature', kind: 'stop',
         note: 'Sandstone pillar mountains, glass bridge, serious hiking — the "Avatar" scenery. Distinct terrain from Guilin, not redundant.',
         coord: [29.1274, 110.4790] },
-      { id: 'sh', num: 7, name: 'Shanghai', dates: 'Oct 20 – 24', tag: 'city', kind: 'stop',
+      { id: 'cs2', num: 7, name: 'Changsha', dates: 'transit', tag: 'culture', kind: 'waypoint',
+        note: 'Back through Changsha to connect onward — same city as the earlier stop, just a changeover this time.',
+        coord: [28.2282, 112.9388] },
+      { id: 'sh', num: 8, name: 'Shanghai', dates: 'Oct 20 – 24', tag: 'city', kind: 'stop',
         note: 'Bund skyline, French Concession streets, and a ride on the Maglev.',
         coord: [31.2304, 121.4737] },
-      { id: 'bj2', num: 8, name: 'Beijing', dates: 'Oct 25 – 28', tag: 'culture', kind: 'stop',
+      { id: 'bj2', num: 9, name: 'Beijing', dates: 'Oct 25 – 28', tag: 'culture', kind: 'stop',
         note: 'Back to family for the final days before flying out Oct 28.',
         coord: [39.9042, 116.4074] },
     ],
@@ -421,8 +416,9 @@ const itineraries = {
       { from: 'cq', to: 'yy', train: 'G3723', route: 'Chongqing West → Guilin West', dep: '10:06', arr: '13:49', duration: '3h43m', cls: 'G', flag: false },
       { from: 'yy', to: 'cs', train: 'G2066', route: 'Guilin → Changsha South', dep: '10:15', arr: '13:12', duration: '2h57m', cls: 'G', flag: false },
       { from: 'cs', to: 'zj', train: 'C7752', route: 'Changsha → Zhangjiajie West', dep: '07:10', arr: '09:02', duration: '1h52m', cls: 'C', flag: false },
-      { from: 'zj', to: 'sh', train: 'G221', route: 'Zhangjiajie West → Shanghai Hongqiao', dep: '14:39', arr: '21:57', duration: '7h18m', cls: 'G', flag: true,
-        note: 'Direct — no backtrack through Changsha needed. Longest single leg of this itinerary, but under Itinerary 1\'s longest day by almost 3 hours.' },
+      { from: 'zj', to: 'cs2', train: 'C7785', route: 'Zhangjiajie West → Changsha South', dep: '08:00', arr: '09:52', duration: '1h52m', cls: 'C', flag: false },
+      { from: 'cs2', to: 'sh', train: 'G204', route: 'Changsha South → Shanghai Hongqiao', dep: '11:05', arr: '15:09', duration: '4h04m', cls: 'G', flag: false,
+        note: 'Comfortable 73min connection from the Zhangjiajie train. Two bullet-train legs instead of one long direct sit — same day, more time on G-class HSR.' },
       { from: 'sh', to: 'bj2', train: 'G2', route: 'Shanghai Hongqiao → Beijing South', dep: '06:43', arr: '11:32', duration: '4h49m', cls: 'G', flag: false },
     ],
   },
