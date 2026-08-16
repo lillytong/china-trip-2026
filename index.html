@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>China 2026 — Rail Loop</title>
+<title>China Trip 2026</title>
 <meta name="description" content="A 30-day, mostly-high-speed-rail loop through China — Beijing, Xi'an, Chongqing, Guilin/Yangshuo, Yunnan, and Shanghai.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -255,17 +255,9 @@
 
 <header class="masthead">
   <p class="masthead__eyebrow">Sep 30 – Oct 28 · 2026</p>
-  <h1 class="masthead__title">The Beijing Loop</h1>
+  <h1 class="masthead__title">China Trip 2026</h1>
   <p class="masthead__sub">Thirty days on China's high-speed rail network — imperial capitals, karst rivers, and the tech coast, mostly at 300&nbsp;km/h. One bus, the rest bullet trains.</p>
 </header>
-
-<div class="stats">
-  <div class="stats__item"><div class="stats__value">30</div><div class="stats__label">Days</div></div>
-  <div class="stats__item"><div class="stats__value">9</div><div class="stats__label">Stops</div></div>
-  <div class="stats__item"><div class="stats__value">8</div><div class="stats__label">Rail legs</div></div>
-  <div class="stats__item"><div class="stats__value">1</div><div class="stats__label">Bus leg</div></div>
-  <div class="stats__item"><div class="stats__value">~7,000km</div><div class="stats__label">Rail distance</div></div>
-</div>
 
 <div class="legend">
   <span class="legend__swatch"><span class="legend__line"></span> Direct HSR</span>
@@ -278,7 +270,7 @@
   <div class="timeline" id="timeline"></div>
 </div>
 
-<footer>Made for the trip — map data © OpenStreetMap contributors. Rail times are fastest-published direct/near-direct options; confirm against 12306 / Trip.com before booking.</footer>
+<footer>Made for the trip — map tiles © Esri. Rail times are fastest-published direct/near-direct options; confirm against 12306 / Trip.com before booking.</footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
@@ -330,9 +322,9 @@ const legs = [
 const byId = Object.fromEntries(stops.map(s => [s.id, s]));
 
 const map = L.map('map', { scrollWheelZoom: true }).setView([32, 108], 4.4);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
   maxZoom: 18,
-  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+  attribution: 'Tiles &copy; Esri &mdash; Source: Esri, HERE, Garmin, USGS, Intermap, INCREMENT P, NRCan, Esri Japan, METI, Esri China (Hong Kong), Esri Korea, Esri (Thailand), NGCC, &copy; OpenStreetMap contributors, GIS User Community'
 }).addTo(map);
 
 function markerIcon(stop) {
