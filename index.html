@@ -305,9 +305,65 @@
     border-radius: 6px;
   }
   .leaflet-popup-tip { background: var(--card); }
-  .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.1rem; margin: 0 0 0.2rem; }
-  .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin: 0 0 0.4rem; }
-  .popup__note { font-size: 0.82rem; margin: 0; }
+  .leaflet-popup-content { margin: 0; width: 240px !important; }
+  .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.1rem; margin: 0.6rem 0.75rem 0.2rem; }
+  .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin: 0 0.75rem 0.4rem; }
+  .popup__note { font-size: 0.82rem; margin: 0 0.75rem 0.7rem; }
+
+  .carousel {
+    position: relative;
+    width: 240px;
+    height: 140px;
+    overflow: hidden;
+    background: var(--ink);
+    border-radius: 6px 6px 0 0;
+  }
+  .carousel__track {
+    display: flex;
+    height: 100%;
+    transition: transform 220ms ease;
+  }
+  .carousel__slide { flex: none; width: 240px; height: 100%; position: relative; }
+  .carousel__img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .carousel__caption {
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    padding: 0.25rem 0.5rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.6rem;
+    color: #fff;
+    background: linear-gradient(transparent, rgba(0,0,0,0.65));
+  }
+  .carousel__btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(16,21,31,0.45);
+    color: #fff;
+    border: none;
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.85rem;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .carousel__btn:hover { background: rgba(16,21,31,0.7); }
+  .carousel__btn--prev { left: 6px; }
+  .carousel__btn--next { right: 6px; }
+  .carousel__dots {
+    position: absolute;
+    bottom: 4px;
+    left: 0; right: 0;
+    display: flex;
+    justify-content: center;
+    gap: 4px;
+  }
+  .carousel__dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.5); }
+  .carousel__dot.is-active { background: #fff; }
 
   .leaflet-tooltip.leg-label {
     background: var(--card);
@@ -356,6 +412,103 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
+const CITY_IMAGES = {
+  "Beijing": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/e/ef/The_Forbidden_City_-_View_from_Coal_Hill.jpg", caption: "Forbidden City" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Great_Wall_of_China_July_2006.JPG", caption: "Great Wall" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/d/db/Longevity_Hill_of_the_Summer_Palace.jpg", caption: "Summer Palace" },
+  ],
+  "Xi'an": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/8/88/51714-Terracota-Army.jpg", caption: "Terracotta Army" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/3/32/City_wall_of_Xi%27an_51550-Xian_%2827959363326%29.jpg", caption: "City Wall" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/1/13/Giant_Wild_Goose_Pagoda.jpg", caption: "Giant Wild Goose Pagoda" },
+  ],
+  "Chongqing": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/6/64/202308_Hongya_Cave_at_night_from_Qiansimen_Bridge.jpg", caption: "Hongya Cave" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Ciqikou18.JPG", caption: "Ciqikou Ancient Town" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/6/67/Chongqing_Nightscape.jpg", caption: "Chongqing skyline" },
+  ],
+  "Kunming": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/9/97/Green_Lake_Park%2C_Kunming%2C_China_-_DSC03519.JPG", caption: "Green Lake Park" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Shilin%2C_Yunnan_24740.jpg", caption: "Stone Forest" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/7/78/Golden_Temple_Kunming_Gate_2009_07.jpg", caption: "Golden Temple" },
+  ],
+  "Jianshui": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Jianshui_Confucian_Temple_-_P1360987.JPG", caption: "Confucian Temple" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/2/22/Zhu_Family_Garden_%2848671110343%29.jpg", caption: "Zhu Family Garden" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Jianshui_-_Chaoyang_Gate_-_P1370485.JPG", caption: "Chaoyang Gate" },
+  ],
+  "Guilin": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/9/98/Elephant_Trunk_Hill%2C_Guilin.jpg", caption: "Elephant Trunk Hill" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Reed_Flute_Cave_89145-Guilin_%2830047619307%29.jpg", caption: "Reed Flute Cave" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Li_River_cruise_from_Guilin_to_Yangshuo.JPG", caption: "Li River" },
+  ],
+  "Yangshuo": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/f/fb/West_Street_Yangshuo.jpg", caption: "West Street" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/5/53/Li_River_and_mountains_in_Yangshuo_County%2C_Guilin52.jpg", caption: "Karst peaks" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Yangshuo-4335.JPG", caption: "Countryside" },
+  ],
+  "Shanghai": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/6/64/Shanghai_skyline_from_the_bund.jpg", caption: "The Bund" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Yuyuan_Garden_3.jpg", caption: "Yuyuan Garden" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/f/fb/Shanghai_Oriental_Pearl_Tower-20150516-RM-130617.jpg", caption: "Oriental Pearl Tower" },
+  ],
+  "Suzhou": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/f/f2/20090905_Suzhou_Humble_Administrator%27s_Garden_4536.jpg", caption: "Humble Administrator's Garden" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/0/01/20240203_Lingering_Garden_01.jpg", caption: "Lingering Garden" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/1/11/A_gallery_bridge_in_Pingjiang_Road%2C_Gusu%2C_Suzhou%2C_Jiangsu%2C_China%2C_215000.jpg", caption: "Pingjiang Road canal" },
+  ],
+  "Changsha": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/1/1b/20231002_Yuelu_Shuyuan_%28084135%29.jpg", caption: "Yuelu Academy" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/7/74/Young_Mao_Zedong_statue%2C_2010110303.jpg", caption: "Orange Isle" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/3/36/New_building_of_Hunan_Provincial_Museum_in_February_2018%2C_picture2.jpg", caption: "Hunan Provincial Museum" },
+  ],
+  "Zhangjiajie": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/c/c4/The_sandstone_pillars_of_Wulingyuan_%2853963199701%29.jpg", caption: "Wulingyuan pillars" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Zhangjiajie_Glass_Bridge_20190726.jpg", caption: "Glass Bridge" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/8/8f/Tianmen_38258-Zhangjiajie_%2849047523437%29.jpg", caption: "Tianmen Cave" },
+  ],
+  "Nanchang": [
+    { url: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Pavilion_of_Prince_Teng%2C_Nanchang%2C_China1.jpg", caption: "Tengwang Pavilion" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/8/82/Nanchang_Skyline.jpg", caption: "Riverside skyline" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/2/22/StarOfNanchang20070718.jpg", caption: "Star of Nanchang" },
+  ],
+};
+
+let carouselSeq = 0;
+function buildCarousel(cityName) {
+  const images = CITY_IMAGES[cityName];
+  if (!images || !images.length) return '';
+  const id = `car${carouselSeq++}`;
+  const slides = images.map(img => `
+    <div class="carousel__slide">
+      <img class="carousel__img" src="${img.url}" alt="${img.caption}" loading="lazy">
+      <span class="carousel__caption">${img.caption}</span>
+    </div>
+  `).join('');
+  const dots = images.map((_, i) => `<span class="carousel__dot${i === 0 ? ' is-active' : ''}"></span>`).join('');
+  return `
+    <div class="carousel" id="${id}" data-index="0" data-count="${images.length}">
+      <div class="carousel__track">${slides}</div>
+      ${images.length > 1 ? `
+        <button class="carousel__btn carousel__btn--prev" onclick="carouselNav('${id}', -1)">‹</button>
+        <button class="carousel__btn carousel__btn--next" onclick="carouselNav('${id}', 1)">›</button>
+        <div class="carousel__dots">${dots}</div>
+      ` : ''}
+    </div>
+  `;
+}
+
+window.carouselNav = function(id, delta) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const count = +el.dataset.count;
+  let idx = (+el.dataset.index + delta + count) % count;
+  el.dataset.index = idx;
+  el.querySelector('.carousel__track').style.transform = `translateX(-${idx * 240}px)`;
+  el.querySelectorAll('.carousel__dot').forEach((d, i) => d.classList.toggle('is-active', i === idx));
+};
+
 const itineraries = {
   itin1: {
     label: 'Itinerary 1',
@@ -493,15 +646,19 @@ const timeline = document.getElementById('timeline');
 const totalbar = document.getElementById('totalbar');
 
 function markerIcon(stop) {
-  const cls = stop.kind === 'waypoint' ? 'stop-marker stop-marker--waypoint' : 'stop-marker';
-  const label = stop.kind === 'waypoint' ? '' : stop.num;
+  const isReturn = stop.id === 'bj2';
+  const label = stop.kind === 'waypoint' || isReturn ? '' : stop.num;
+  const style = stop.kind === 'waypoint'
+    ? 'width:14px;height:14px;border-radius:50%;background:var(--card);border:2px solid var(--text-muted);'
+    : isReturn
+      ? 'width:20px;height:20px;border-radius:50%;background:var(--rail);border:2.5px solid var(--rail);box-shadow:0 2px 6px rgba(16,21,31,0.25);'
+      : 'width:30px;height:30px;border-radius:50%;background:var(--card);border:2.5px solid var(--rail);color:var(--rail);display:flex;align-items:center;justify-content:center;font-family:\'IBM Plex Mono\',monospace;font-weight:500;font-size:12px;box-shadow:0 2px 6px rgba(16,21,31,0.25);';
+  const size = stop.kind === 'waypoint' ? 14 : isReturn ? 20 : 30;
   return L.divIcon({
     className: '',
-    html: `<div class="${cls}" style="${stop.kind === 'waypoint'
-      ? 'width:14px;height:14px;border-radius:50%;background:var(--card);border:2px solid var(--text-muted);'
-      : 'width:30px;height:30px;border-radius:50%;background:var(--card);border:2.5px solid var(--rail);color:var(--rail);display:flex;align-items:center;justify-content:center;font-family:\'IBM Plex Mono\',monospace;font-weight:500;font-size:12px;box-shadow:0 2px 6px rgba(16,21,31,0.25);'}">${label}</div>`,
-    iconSize: stop.kind === 'waypoint' ? [14, 14] : [30, 30],
-    iconAnchor: stop.kind === 'waypoint' ? [7, 7] : [15, 15],
+    html: `<div style="${style}">${label}</div>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
     popupAnchor: [0, -14],
   });
 }
@@ -517,7 +674,7 @@ function render(itinId) {
   const markers = {};
   stops.forEach(stop => {
     const marker = L.marker(stop.coord, { icon: markerIcon(stop) }).addTo(layerGroup);
-    marker.bindPopup(`<p class="popup__name">${stop.name}</p><p class="popup__dates">${stop.dates}</p><p class="popup__note">${stop.note}</p>`);
+    marker.bindPopup(`${buildCarousel(stop.name)}<p class="popup__name">${stop.name}</p><p class="popup__dates">${stop.dates}</p><p class="popup__note">${stop.note}</p>`, { minWidth: 240, maxWidth: 240 });
     markers[stop.id] = marker;
   });
   legs.forEach(leg => {
