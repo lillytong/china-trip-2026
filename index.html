@@ -412,6 +412,27 @@
   .carousel__dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.5); }
   .carousel__dot.is-active { background: #fff; }
 
+  @media (max-width: 640px) {
+    .leaflet-popup-content { width: 220px !important; }
+    .popup__info { flex-basis: 78px; padding: 0.4rem 0.4rem; }
+    .popup__name { font-size: 0.76rem; line-height: 1.05; margin: 0 0 0.05rem; }
+    .popup__dates { font-size: 0.5rem; margin: 0 0 0.15rem; }
+    .popup__note {
+      font-size: 0.58rem;
+      line-height: 1.15;
+      display: -webkit-box;
+      -webkit-line-clamp: 5;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .carousel__caption { font-size: 0.46rem; padding: 0.15rem 0.3rem; }
+    .carousel__btn { width: 16px; height: 16px; font-size: 0.6rem; }
+    .carousel__btn--prev { left: 4px; }
+    .carousel__btn--next { right: 4px; }
+    .carousel__dots { bottom: 3px; gap: 3px; }
+    .carousel__dot { width: 4px; height: 4px; }
+  }
+
   .leaflet-tooltip.leg-label {
     background: var(--card);
     color: var(--text);
@@ -736,7 +757,7 @@ function render(itinId) {
         </div>
         <div class="popup__media">${buildCarousel(stop.name)}</div>
       </div>
-    `, { minWidth: 380, maxWidth: 380, autoPan: true, autoPanPadding: [40, 40] });
+    `, { minWidth: 380, maxWidth: 380, autoPan: true, autoPanPadding: [20, 20] });
     markers[stop.id] = marker;
   });
   legs.forEach(leg => {
