@@ -298,7 +298,6 @@
     color: var(--text-muted);
   }
   .totalbar strong { color: var(--text); font-variant-numeric: tabular-nums; }
-  .totalbar .savings { color: var(--tag-nature); }
 
   .leaflet-popup-content-wrapper {
     background: var(--card);
@@ -523,11 +522,7 @@ function render(itinId) {
   map.setView([32, 108], 4.4);
 
   const totalMins = legs.reduce((sum, l) => sum + parseDuration(l.duration), 0);
-  const otherKey = itinId === 'itin1' ? 'itin2' : 'itin1';
-  const otherMins = itineraries[otherKey].legs.reduce((sum, l) => sum + parseDuration(l.duration), 0);
-  const diff = totalMins - otherMins;
-  totalbar.innerHTML = `<span>Total rail time: <strong>${formatDuration(totalMins)}</strong> across ${legs.length} legs</span>` +
-    (diff !== 0 ? `<span class="savings">${diff < 0 ? formatDuration(-diff) + ' less' : formatDuration(diff) + ' more'} than ${itineraries[otherKey].label}</span>` : '');
+  totalbar.innerHTML = `<span>Total rail time: <strong>${formatDuration(totalMins)}</strong> across ${legs.length} legs</span>`;
 
   timeline.innerHTML = '';
   stops.forEach(stop => {
