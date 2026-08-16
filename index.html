@@ -51,8 +51,11 @@
     }
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; }
+  html, body { margin: 0; padding: 0; height: 100%; }
   body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
     background: var(--paper);
     color: var(--text);
     font-family: 'IBM Plex Sans', system-ui, sans-serif;
@@ -61,6 +64,7 @@
   a { color: inherit; }
 
   .masthead {
+    flex: none;
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
@@ -122,21 +126,19 @@
   }
 
   .layout {
+    flex: 1;
     display: grid;
-    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-    align-items: start;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+    min-height: 0;
   }
   @media (max-width: 880px) {
-    .layout { grid-template-columns: 1fr; }
+    .layout { grid-template-columns: 1fr; grid-template-rows: 45vh 1fr; }
   }
 
   #map {
-    height: min(78vh, 720px);
+    height: 100%;
     width: 100%;
     background: var(--card);
-  }
-  @media (max-width: 880px) {
-    #map { height: 62vh; }
   }
 
   .legend {
@@ -157,15 +159,17 @@
   .panel {
     display: flex;
     flex-direction: column;
-    max-height: min(78vh, 720px);
+    height: 100%;
+    min-height: 0;
     border-left: 1px solid var(--line);
   }
   @media (max-width: 880px) {
-    .panel { max-height: none; border-left: none; border-top: 1px solid var(--line); }
+    .panel { border-left: none; border-top: 1px solid var(--line); }
   }
 
   .timeline {
     flex: 1;
+    min-height: 0;
     overflow-y: auto;
   }
 
@@ -305,6 +309,20 @@
   .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.1rem; margin: 0 0 0.2rem; }
   .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin: 0 0 0.4rem; }
   .popup__note { font-size: 0.82rem; margin: 0; }
+
+  .leaflet-tooltip.leg-label {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.68rem;
+    font-weight: 500;
+    box-shadow: var(--shadow);
+    white-space: nowrap;
+  }
+  .leaflet-tooltip.leg-label::before { display: none; }
 </style>
 </head>
 <body>
@@ -369,14 +387,14 @@ const itineraries = {
         coord: [39.9042, 116.4074] },
     ],
     legs: [
-      { from: 'bj1', to: 'xa', train: 'G351', route: "Beijing West → Xi'an North", dep: '07:55', arr: '12:05', duration: '4h10m', cls: 'G', flag: false },
-      { from: 'xa', to: 'cq', train: 'D997', route: "Xi'an North → Chongqing West", dep: '05:18', arr: '10:22', duration: '5h04m', cls: 'D', flag: false },
+      { from: 'bj1', to: 'xa', train: 'G357', route: "Beijing West → Xi'an North", dep: '08:10', arr: '12:31', duration: '4h21m', cls: 'G', flag: false },
+      { from: 'xa', to: 'cq', train: 'G3739', route: "Xi'an North → Chongqing West", dep: '08:07', arr: '13:39', duration: '5h32m', cls: 'G', flag: false },
       { from: 'cq', to: 'km', train: 'G2873', route: 'Chongqing West → Kunming South', dep: '08:49', arr: '13:58', duration: '5h09m', cls: 'G', flag: false },
-      { from: 'km', to: 'dl', train: 'D8653', route: 'Kunming South → Dali', dep: '06:50', arr: '09:08', duration: '2h18m', cls: 'D', flag: false },
+      { from: 'km', to: 'dl', train: 'D8665', route: 'Kunming South → Dali', dep: '08:11', arr: '10:48', duration: '2h37m', cls: 'D', flag: false },
       { from: 'dl', to: 'yy', train: 'D3934', route: 'Dali → Guilin North (via Kunming South)', dep: '08:37', arr: '18:52', duration: '10h15m', cls: 'D', flag: true,
         note: 'Through-train — stops ~5min at Kunming South, no change of train. Longest day of the trip; alt: break it with an overnight in Kunming, then a fresh ~4.5h morning train to Guilin.' },
       { from: 'yy', to: 'sh', train: 'G264', route: 'Guilin → Shanghai Hongqiao', dep: '12:05', arr: '19:30', duration: '7h25m', cls: 'G', flag: false },
-      { from: 'sh', to: 'bj2', train: 'G2', route: 'Shanghai Hongqiao → Beijing South', dep: '06:43', arr: '11:32', duration: '4h49m', cls: 'G', flag: false },
+      { from: 'sh', to: 'bj2', train: 'G8', route: 'Shanghai Hongqiao → Beijing South', dep: '08:00', arr: '12:26', duration: '4h26m', cls: 'G', flag: false },
     ],
   },
   itin2: {
@@ -411,15 +429,17 @@ const itineraries = {
         coord: [39.9042, 116.4074] },
     ],
     legs: [
-      { from: 'bj1', to: 'xa', train: 'G351', route: "Beijing West → Xi'an North", dep: '07:55', arr: '12:05', duration: '4h10m', cls: 'G', flag: false },
-      { from: 'xa', to: 'cq', train: 'D997', route: "Xi'an North → Chongqing West", dep: '05:18', arr: '10:22', duration: '5h04m', cls: 'D', flag: false },
+      { from: 'bj1', to: 'xa', train: 'G357', route: "Beijing West → Xi'an North", dep: '08:10', arr: '12:31', duration: '4h21m', cls: 'G', flag: false },
+      { from: 'xa', to: 'cq', train: 'G3739', route: "Xi'an North → Chongqing West", dep: '08:07', arr: '13:39', duration: '5h32m', cls: 'G', flag: false },
       { from: 'cq', to: 'yy', train: 'G3723', route: 'Chongqing West → Guilin West', dep: '10:06', arr: '13:49', duration: '3h43m', cls: 'G', flag: false },
       { from: 'yy', to: 'cs', train: 'G2066', route: 'Guilin → Changsha South', dep: '10:15', arr: '13:12', duration: '2h57m', cls: 'G', flag: false },
-      { from: 'cs', to: 'zj', train: 'C7752', route: 'Changsha → Zhangjiajie West', dep: '07:10', arr: '09:02', duration: '1h52m', cls: 'C', flag: false },
-      { from: 'zj', to: 'cs2', train: 'C7785', route: 'Zhangjiajie West → Changsha South', dep: '08:00', arr: '09:52', duration: '1h52m', cls: 'C', flag: false },
+      { from: 'cs', to: 'zj', train: 'G2430', route: 'Changsha → Zhangjiajie West', dep: '09:00', arr: '10:52', duration: '1h52m', cls: 'G', flag: false,
+        note: "Departs Changsha's main station — a short transfer (~25min by metro/taxi) from Changsha South, where the Guilin train arrives the day before." },
+      { from: 'zj', to: 'cs2', train: 'C7785', route: 'Zhangjiajie West → Changsha', dep: '08:00', arr: '09:52', duration: '1h52m', cls: 'C', flag: false,
+        note: 'Arrives Changsha\'s main station.' },
       { from: 'cs2', to: 'sh', train: 'G204', route: 'Changsha South → Shanghai Hongqiao', dep: '11:05', arr: '15:09', duration: '4h04m', cls: 'G', flag: false,
-        note: 'Comfortable 73min connection from the Zhangjiajie train. Two bullet-train legs instead of one long direct sit — same day, more time on G-class HSR.' },
-      { from: 'sh', to: 'bj2', train: 'G2', route: 'Shanghai Hongqiao → Beijing South', dep: '06:43', arr: '11:32', duration: '4h49m', cls: 'G', flag: false },
+        note: "73min connection, including a short transfer between Changsha's two stations (main → South, ~25min by metro/taxi) — workable, not rushed. Two bullet-train legs instead of one long direct sit." },
+      { from: 'sh', to: 'bj2', train: 'G8', route: 'Shanghai Hongqiao → Beijing South', dep: '08:00', arr: '12:26', duration: '4h26m', cls: 'G', flag: false },
     ],
   },
 };
@@ -478,7 +498,7 @@ function render(itinId) {
     const line = L.polyline([from.coord, to.coord], {
       color: pillColor(leg.cls), weight: 3, dashArray: leg.flag ? '9 6' : null, opacity: 0.9,
     }).addTo(layerGroup);
-    line.bindTooltip(`${leg.train} · ${leg.route} · ${leg.dep}–${leg.arr} · ${leg.duration}`, { sticky: true });
+    line.bindTooltip(leg.duration, { permanent: true, direction: 'center', className: 'leg-label' });
   });
   map.setView([32, 108], 4.4);
 
