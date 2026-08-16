@@ -133,26 +133,34 @@
 
   .legend {
     display: flex;
-    flex-wrap: wrap;
-    gap: 1.1rem;
-    padding: 0.7rem clamp(1rem, 4vw, 1.5rem);
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 0.6rem clamp(1rem, 4vw, 1.5rem);
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     color: var(--text-muted);
     border-bottom: 1px solid var(--line);
     align-items: center;
+    white-space: nowrap;
   }
-  .legend__swatch { display: inline-flex; align-items: center; gap: 0.4rem; }
-  .legend__line { display: inline-block; width: 22px; height: 0; border-top: 3px solid var(--rail); }
+  .legend__swatch { display: inline-flex; align-items: center; gap: 0.35rem; flex: none; }
+  .legend__line { display: inline-block; width: 18px; height: 0; border-top: 3px solid var(--rail); }
   .legend__line--flag { border-top: 3px dashed var(--rail); }
 
-  .timeline {
+  .panel {
+    display: flex;
+    flex-direction: column;
     max-height: min(78vh, 720px);
-    overflow-y: auto;
     border-left: 1px solid var(--line);
   }
   @media (max-width: 880px) {
-    .timeline { max-height: none; border-left: none; border-top: 1px solid var(--line); }
+    .panel { max-height: none; border-left: none; border-top: 1px solid var(--line); }
+  }
+
+  .timeline {
+    flex: 1;
+    overflow-y: auto;
   }
 
   .stop {
@@ -247,13 +255,20 @@
   .hsr-pill--d { background: var(--tag-city); }
   .hsr-pill--c { background: var(--tag-nature); }
 
-  .itin-tabs { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+  .itin-tabs {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    flex: none;
+    padding: 0.9rem clamp(1rem, 4vw, 1.5rem);
+    border-bottom: 1px solid var(--line);
+  }
   .itin-tab {
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.72rem;
+    font-size: 0.7rem;
     letter-spacing: 0.05em;
     text-transform: uppercase;
-    padding: 0.45rem 1rem;
+    padding: 0.45rem 0.9rem;
     border: 1px solid var(--line);
     border-radius: 999px;
     background: var(--card);
@@ -299,26 +314,26 @@
 <header class="masthead">
   <p class="masthead__eyebrow">Sep 30 – Oct 28 · 2026</p>
   <h1 class="masthead__title">China Trip 2026</h1>
-  <p class="masthead__sub" id="itinSubtitle"></p>
-  <div class="itin-tabs" id="itinTabs">
-    <button class="itin-tab" data-itin="itin1">Itinerary 1 — via Yunnan</button>
-    <button class="itin-tab" data-itin="itin2">Itinerary 2 — via Changsha/Zhangjiajie</button>
-  </div>
 </header>
 
 <div class="legend">
-  <span class="legend__swatch"><span class="hsr-pill hsr-pill--g">G</span> Gaotie — bullet, up to 350km/h</span>
-  <span class="legend__swatch"><span class="hsr-pill hsr-pill--d">D</span> Dongche — EMU, up to 250km/h</span>
-  <span class="legend__swatch"><span class="hsr-pill hsr-pill--c">C</span> Chengji — intercity EMU</span>
-  <span class="legend__swatch"><span class="legend__line legend__line--flag"></span> Long single-seat day (still direct, no transfer)</span>
-  <span class="legend__swatch">Every leg below is 12306-verified HSR — no conventional rail.</span>
+  <span class="legend__swatch"><span class="hsr-pill hsr-pill--g">G</span> Gaotie</span>
+  <span class="legend__swatch"><span class="hsr-pill hsr-pill--d">D</span> Dongche</span>
+  <span class="legend__swatch"><span class="hsr-pill hsr-pill--c">C</span> Chengji</span>
+  <span class="legend__swatch"><span class="legend__line legend__line--flag"></span> long day</span>
 </div>
 
 <div class="totalbar" id="totalbar"></div>
 
 <div class="layout">
   <div id="map"></div>
-  <div class="timeline" id="timeline"></div>
+  <div class="panel">
+    <div class="itin-tabs" id="itinTabs">
+      <button class="itin-tab" data-itin="itin1">Itinerary 1 — via Yunnan</button>
+      <button class="itin-tab" data-itin="itin2">Itinerary 2 — via Changsha/Zhangjiajie</button>
+    </div>
+    <div class="timeline" id="timeline"></div>
+  </div>
 </div>
 
 <footer>Made for the trip — map tiles © Esri. Train numbers and times checked directly against 12306.cn; schedules can shift closer to travel, so re-confirm before booking (12306 opens ticket sales ~15 days ahead).</footer>
@@ -328,7 +343,6 @@
 const itineraries = {
   itin1: {
     label: 'Itinerary 1',
-    subtitle: "Via Yunnan — Beijing · Xi'an · Chongqing · Kunming/Dali · Guilin · Shanghai",
     stops: [
       { id: 'bj1', num: 1, name: 'Beijing', dates: 'Sep 30 – Oct 7', tag: 'culture', kind: 'stop',
         note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead.",
@@ -368,7 +382,6 @@ const itineraries = {
   },
   itin2: {
     label: 'Itinerary 2',
-    subtitle: "Via Changsha/Zhangjiajie — Beijing · Xi'an · Chongqing · Guilin · Changsha · Zhangjiajie · Shanghai. No Yunnan.",
     stops: [
       { id: 'bj1', num: 1, name: 'Beijing', dates: 'Sep 30 – Oct 7', tag: 'culture', kind: 'stop',
         note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead.",
@@ -428,7 +441,6 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_M
 let layerGroup = L.layerGroup().addTo(map);
 const timeline = document.getElementById('timeline');
 const totalbar = document.getElementById('totalbar');
-const subtitleEl = document.getElementById('itinSubtitle');
 
 function markerIcon(stop) {
   const cls = stop.kind === 'waypoint' ? 'stop-marker stop-marker--waypoint' : 'stop-marker';
@@ -450,7 +462,6 @@ function render(itinId) {
   const byId = Object.fromEntries(stops.map(s => [s.id, s]));
 
   document.querySelectorAll('.itin-tab').forEach(t => t.classList.toggle('is-active', t.dataset.itin === itinId));
-  subtitleEl.textContent = itin.subtitle;
 
   layerGroup.clearLayers();
   const markers = {};
