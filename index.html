@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>China Trip 2026</title>
-<meta name="description" content="A 30-day, mostly-high-speed-rail loop through China — Beijing, Xi'an, Chongqing, Guilin/Yangshuo, Yunnan, and Shanghai.">
+<meta name="description" content="A 12306-verified, 100% high-speed-rail loop through China — Beijing, Xi'an, Chongqing, Yunnan, Guilin/Yangshuo, and Shanghai.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -145,7 +145,6 @@
   .legend__swatch { display: inline-flex; align-items: center; gap: 0.4rem; }
   .legend__line { display: inline-block; width: 22px; height: 0; border-top: 3px solid var(--rail); }
   .legend__line--flag { border-top: 3px dashed var(--rail); }
-  .legend__line--bus { border-top: 3px dotted var(--bus); }
 
   .timeline {
     max-height: min(78vh, 720px);
@@ -167,7 +166,6 @@
   }
   .stop:hover, .stop.is-active { background: var(--rail-soft); }
   .stop--waypoint { opacity: 0.7; }
-  .stop--daytrip { opacity: 0.85; }
 
   .stop__num {
     flex: none;
@@ -218,20 +216,35 @@
 
   .leg {
     display: flex;
-    align-items: baseline;
-    gap: 0.5rem;
+    align-items: flex-start;
+    gap: 0.6rem;
     margin-left: 2.8rem;
-    padding: 0.5rem clamp(1rem, 4vw, 1.5rem) 0.5rem 0;
+    padding: 0.6rem clamp(1rem, 4vw, 1.5rem) 0.6rem 0;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.72rem;
     color: var(--text-muted);
     border-bottom: 1px solid var(--line);
   }
-  .leg__mode { flex: none; }
-  .leg--flag .leg__mode { color: var(--rail); }
-  .leg--bus .leg__mode { color: var(--bus); }
-  .leg__flagnote { color: var(--rail); }
-  .leg--bus .leg__flagnote { color: var(--bus); }
+  .leg__body { display: flex; flex-direction: column; gap: 0.15rem; }
+  .leg__route { color: var(--text); }
+  .leg__meta { font-size: 0.68rem; }
+  .leg--flag .leg__note { color: var(--rail); }
+
+  .hsr-pill {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: 4px;
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 0.75rem;
+    color: var(--card);
+  }
+  .hsr-pill--g { background: var(--rail); }
+  .hsr-pill--d { background: var(--tag-city); }
 
   footer {
     padding: 1.2rem clamp(1rem, 4vw, 3rem) 2rem;
@@ -259,9 +272,10 @@
 </header>
 
 <div class="legend">
-  <span class="legend__swatch"><span class="legend__line"></span> Direct HSR</span>
-  <span class="legend__swatch"><span class="legend__line legend__line--flag"></span> HSR, long day / transfer</span>
-  <span class="legend__swatch"><span class="legend__line legend__line--bus"></span> Bus</span>
+  <span class="legend__swatch"><span class="hsr-pill hsr-pill--g">G</span> Gaotie — bullet, up to 350km/h</span>
+  <span class="legend__swatch"><span class="hsr-pill hsr-pill--d">D</span> Dongche — EMU, up to 250km/h</span>
+  <span class="legend__swatch"><span class="legend__line legend__line--flag"></span> Long single-seat day (still direct, no transfer)</span>
+  <span class="legend__swatch">Every leg below is 12306-verified HSR — no conventional rail.</span>
 </div>
 
 <div class="layout">
@@ -269,7 +283,7 @@
   <div class="timeline" id="timeline"></div>
 </div>
 
-<footer>Made for the trip — map tiles © Esri. Rail times are fastest-published direct/near-direct options; confirm against 12306 / Trip.com before booking.</footer>
+<footer>Made for the trip — map tiles © Esri. Train numbers and times checked directly against 12306.cn; schedules can shift closer to travel, so re-confirm before booking (12306 opens ticket sales ~15 days ahead).</footer>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
@@ -283,39 +297,32 @@ const stops = [
   { id: 'cq', num: 3, name: 'Chongqing', dates: 'Oct 10 – 13', tag: 'city', kind: 'stop',
     note: 'Cliffside mountain city, cable cars over the river, and proper Chongqing hotpot.',
     coord: [29.5630, 106.5516] },
-  { id: 'yy', num: 4, name: 'Guilin / Yangshuo', dates: 'Oct 13 – 16', tag: 'nature', kind: 'stop',
-    note: 'Li River karst peaks — cycling the countryside between rice paddies.',
-    coord: [24.7770, 110.4996] },
-  { id: 'km', num: 5, name: 'Kunming', dates: 'transit', tag: 'city', kind: 'waypoint',
+  { id: 'km', num: 4, name: 'Kunming', dates: 'transit', tag: 'city', kind: 'waypoint',
     note: 'Rail junction into Yunnan — not a stop, just the way through.',
     coord: [24.8801, 102.8329] },
-  { id: 'dl', num: 6, name: 'Dali', dates: 'Oct 16 – 19', tag: 'nature', kind: 'stop',
-    note: 'Erhai Lake and the old town — a slower pace after three fast-moving weeks.',
+  { id: 'dl', num: 5, name: 'Dali', dates: 'Oct 13 – 17', tag: 'nature', kind: 'stop',
+    note: "Erhai Lake and the old town — Yunnan's one stop on this trip.",
     coord: [25.6065, 100.2676] },
-  { id: 'sx', num: 7, name: 'Shaxi', dates: 'Oct 19 – 21', tag: 'culture', kind: 'stop',
-    note: "A quiet ancient market town, chosen over Lijiang's crowds. The trip's one non-rail leg: a short bus in from Dali.",
-    coord: [26.3167, 99.9167] },
-  { id: 'sh', num: 8, name: 'Shanghai', dates: 'Oct 21 – 24', tag: 'city', kind: 'stop',
+  { id: 'yy', num: 6, name: 'Guilin / Yangshuo', dates: 'Oct 17 – 20', tag: 'nature', kind: 'stop',
+    note: 'Li River karst peaks — cycling the countryside between rice paddies.',
+    coord: [24.7770, 110.4996] },
+  { id: 'sh', num: 7, name: 'Shanghai', dates: 'Oct 20 – 24', tag: 'city', kind: 'stop',
     note: 'Bund skyline, French Concession streets, and a ride on the Maglev.',
     coord: [31.2304, 121.4737] },
-  { id: 'sz', num: 9, name: 'Suzhou', dates: 'day trip', tag: 'culture', kind: 'daytrip',
-    note: 'Classical gardens — out and back from Shanghai in a day.',
-    coord: [31.2989, 120.5853] },
-  { id: 'bj2', num: 10, name: 'Beijing', dates: 'Oct 26 – 28', tag: 'culture', kind: 'stop',
-    note: 'Back to family for the final days before flying out.',
+  { id: 'bj2', num: 8, name: 'Beijing', dates: 'Oct 25 – 28', tag: 'culture', kind: 'stop',
+    note: 'Back to family for the final days before flying out Oct 28.',
     coord: [39.9042, 116.4074] },
 ];
 
 const legs = [
-  { from: 'bj1', to: 'xa', mode: 'rail', flag: false, label: '~4.5h direct HSR' },
-  { from: 'xa', to: 'cq', mode: 'rail', flag: false, label: '~5h direct HSR' },
-  { from: 'cq', to: 'yy', mode: 'rail', flag: true, label: '~5–7h HSR, 1 transfer (via Guiyang/Guangzhou)' },
-  { from: 'yy', to: 'km', mode: 'rail', flag: true, label: '~4.5–8h — pick a fast G-service' },
-  { from: 'km', to: 'dl', mode: 'rail', flag: false, label: '~2–3h direct HSR' },
-  { from: 'dl', to: 'sx', mode: 'bus', flag: false, label: '~2.5–3.5h bus' },
-  { from: 'sx', to: 'sh', mode: 'rail', flag: true, label: 'Bus back to Dali/Kunming, then ~8–10h+ HSR with a transfer — the longest travel day of the trip' },
-  { from: 'sh', to: 'sz', mode: 'rail', flag: false, label: '~25–30 min HSR, round trip same day' },
-  { from: 'sh', to: 'bj2', mode: 'rail', flag: false, label: '~4.5h direct HSR' },
+  { from: 'bj1', to: 'xa', train: 'G351', route: 'Beijing West → Xi\'an North', dep: '07:55', arr: '12:05', duration: '4h10m', cls: 'G', flag: false },
+  { from: 'xa', to: 'cq', train: 'D997', route: 'Xi\'an North → Chongqing West', dep: '05:18', arr: '10:22', duration: '5h04m', cls: 'D', flag: false },
+  { from: 'cq', to: 'km', train: 'G2873', route: 'Chongqing West → Kunming South', dep: '08:49', arr: '13:58', duration: '5h09m', cls: 'G', flag: false },
+  { from: 'km', to: 'dl', train: 'D8653', route: 'Kunming South → Dali', dep: '06:50', arr: '09:08', duration: '2h18m', cls: 'D', flag: false },
+  { from: 'dl', to: 'yy', train: 'D3934', route: 'Dali → Guilin North (via Kunming South)', dep: '08:37', arr: '18:52', duration: '10h15m', cls: 'D', flag: true,
+    note: 'Through-train — stops ~5min at Kunming South, no change of train. Longest day of the trip; alt: break it with an overnight in Kunming, then a fresh ~4.5h morning train to Guilin.' },
+  { from: 'yy', to: 'sh', train: 'G264', route: 'Guilin → Shanghai Hongqiao', dep: '12:05', arr: '19:30', duration: '7h25m', cls: 'G', flag: false },
+  { from: 'sh', to: 'bj2', train: 'G2', route: 'Shanghai Hongqiao → Beijing South', dep: '06:43', arr: '11:32', duration: '4h49m', cls: 'G', flag: false },
 ];
 
 const byId = Object.fromEntries(stops.map(s => [s.id, s]));
@@ -354,17 +361,20 @@ const cssVar = name => getComputedStyle(document.documentElement).getPropertyVal
 
 legs.forEach(leg => {
   const from = byId[leg.from], to = byId[leg.to];
-  const style = leg.mode === 'bus'
-    ? { color: cssVar('--bus'), weight: 3, dashArray: '2 8', opacity: 0.9 }
-    : { color: cssVar('--rail'), weight: leg.to === 'sz' ? 2 : 3, dashArray: leg.flag ? '9 6' : null, opacity: 0.9 };
+  const style = {
+    color: leg.cls === 'G' ? cssVar('--rail') : cssVar('--tag-city'),
+    weight: 3,
+    dashArray: leg.flag ? '9 6' : null,
+    opacity: 0.9,
+  };
   const line = L.polyline([from.coord, to.coord], style).addTo(map);
-  line.bindTooltip(leg.label, { sticky: true });
+  line.bindTooltip(`${leg.train} · ${leg.route} · ${leg.dep}–${leg.arr} · ${leg.duration}`, { sticky: true });
 });
 
 const timeline = document.getElementById('timeline');
 stops.forEach(stop => {
   const el = document.createElement('div');
-  el.className = 'stop' + (stop.kind === 'waypoint' ? ' stop--waypoint' : '') + (stop.kind === 'daytrip' ? ' stop--daytrip' : '');
+  el.className = 'stop' + (stop.kind === 'waypoint' ? ' stop--waypoint' : '');
   el.innerHTML = `
     <div class="stop__num">${stop.kind === 'waypoint' ? '·' : stop.num}</div>
     <div class="stop__body">
@@ -387,8 +397,15 @@ stops.forEach(stop => {
   const leg = legs.find(l => l.from === stop.id);
   if (leg) {
     const legEl = document.createElement('div');
-    legEl.className = 'leg' + (leg.mode === 'bus' ? ' leg--bus' : leg.flag ? ' leg--flag' : '');
-    legEl.innerHTML = `<span class="leg__mode">${leg.mode === 'bus' ? '🚌' : '🚄'}</span><span>${leg.label}</span>`;
+    legEl.className = 'leg' + (leg.flag ? ' leg--flag' : '');
+    legEl.innerHTML = `
+      <span class="hsr-pill hsr-pill--${leg.cls.toLowerCase()}">${leg.cls}</span>
+      <div class="leg__body">
+        <span class="leg__route">${leg.train} · ${leg.route}</span>
+        <span class="leg__meta">${leg.dep}–${leg.arr} · ${leg.duration}${leg.flag ? ' · longest day' : ''}</span>
+        ${leg.note ? `<span class="leg__note">${leg.note}</span>` : ''}
+      </div>
+    `;
     timeline.appendChild(legEl);
   }
 });
