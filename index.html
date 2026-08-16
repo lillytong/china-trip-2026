@@ -132,7 +132,14 @@
     min-height: 0;
   }
   @media (max-width: 880px) {
-    .layout { grid-template-columns: 1fr; grid-template-rows: 45vh 1fr; }
+    .layout { grid-template-columns: 1fr; grid-template-rows: 38vh 1fr; }
+  }
+
+  .map-wrap {
+    position: relative;
+    height: 100%;
+    width: 100%;
+    min-height: 0;
   }
 
   #map {
@@ -140,6 +147,8 @@
     width: 100%;
     background: var(--card);
   }
+
+  .leaflet-control-attribution { display: none !important; }
 
   .legend {
     display: flex;
@@ -155,6 +164,11 @@
   .legend__swatch { display: inline-flex; align-items: center; gap: 0.3rem; flex: none; }
   .legend__line { display: inline-block; width: 18px; height: 0; border-top: 3px solid var(--rail); }
   .legend__line--flag { border-top: 3px dashed var(--rail); }
+  @media (max-width: 640px) {
+    .legend { gap: 0.4rem; font-size: 0.6rem; flex-wrap: nowrap; }
+    .legend__swatch { gap: 0.2rem; }
+    .legend__speed { display: none; }
+  }
 
   .panel {
     display: flex;
@@ -288,6 +302,27 @@
   .itin-tab:hover { color: var(--text); }
   .itin-tab.is-active { background: var(--rail); color: var(--card); border-color: var(--rail); }
 
+  .itin-tabs--map { display: none; }
+  @media (max-width: 880px) {
+    .itin-tabs--panel { display: none; }
+    .itin-tabs--map {
+      display: flex;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 1000;
+      margin: 0;
+      padding: 0.55rem clamp(0.75rem, 4vw, 1.5rem);
+      background: color-mix(in srgb, var(--card) 92%, transparent);
+      backdrop-filter: blur(4px);
+      border-top: 1px solid var(--line);
+      border-bottom: none;
+      gap: 0.4rem;
+    }
+    .itin-tabs--map .itin-tab { flex: 1; text-align: center; padding: 0.4rem 0.5rem; font-size: 0.62rem; }
+  }
+
   .totalbar {
     display: flex;
     flex-wrap: wrap;
@@ -305,25 +340,28 @@
     border-radius: 6px;
   }
   .leaflet-popup-tip { background: var(--card); }
-  .leaflet-popup-content { margin: 0; width: 240px !important; }
-  .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.1rem; margin: 0.6rem 0.75rem 0.2rem; }
-  .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin: 0 0.75rem 0.4rem; }
-  .popup__note { font-size: 0.82rem; margin: 0 0.75rem 0.7rem; }
+  .leaflet-popup-content { margin: 0; width: 380px !important; }
+  .popup { display: flex; align-items: stretch; gap: 0; }
+  .popup__info { flex: 1; min-width: 0; padding: 0.7rem 0.75rem; display: flex; flex-direction: column; justify-content: center; }
+  .popup__media { flex: none; }
+  .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.1rem; margin: 0 0 0.2rem; }
+  .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin: 0 0 0.4rem; }
+  .popup__note { font-size: 0.8rem; margin: 0; line-height: 1.35; }
 
   .carousel {
     position: relative;
-    width: 240px;
-    height: 140px;
+    width: 150px;
+    height: 150px;
     overflow: hidden;
     background: var(--ink);
-    border-radius: 6px 6px 0 0;
+    border-radius: 0 6px 6px 0;
   }
   .carousel__track {
     display: flex;
     height: 100%;
     transition: transform 220ms ease;
   }
-  .carousel__slide { flex: none; width: 240px; height: 100%; position: relative; }
+  .carousel__slide { flex: none; width: 150px; height: 100%; position: relative; }
   .carousel__img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .carousel__caption {
     position: absolute;
@@ -389,9 +427,9 @@
   </div>
   <div class="masthead__meta">
     <div class="legend">
-      <span class="legend__swatch"><span class="hsr-pill hsr-pill--g">G</span> Gaotie (350km/h)</span>
-      <span class="legend__swatch"><span class="hsr-pill hsr-pill--d">D</span> Dongche (250km/h)</span>
-      <span class="legend__swatch"><span class="hsr-pill hsr-pill--c">C</span> Chengji (200km/h)</span>
+      <span class="legend__swatch"><span class="hsr-pill hsr-pill--g">G</span> Gaotie <span class="legend__speed">(350km/h)</span></span>
+      <span class="legend__swatch"><span class="hsr-pill hsr-pill--d">D</span> Dongche <span class="legend__speed">(250km/h)</span></span>
+      <span class="legend__swatch"><span class="hsr-pill hsr-pill--c">C</span> Chengji <span class="legend__speed">(200km/h)</span></span>
       <span class="legend__swatch"><span class="legend__line legend__line--flag"></span> long day</span>
     </div>
     <div class="totalbar" id="totalbar"></div>
@@ -399,9 +437,15 @@
 </header>
 
 <div class="layout">
-  <div id="map"></div>
+  <div class="map-wrap">
+    <div id="map"></div>
+    <div class="itin-tabs itin-tabs--map">
+      <button class="itin-tab" data-itin="itin1">Itinerary 1</button>
+      <button class="itin-tab" data-itin="itin2">Itinerary 2</button>
+    </div>
+  </div>
   <div class="panel">
-    <div class="itin-tabs" id="itinTabs">
+    <div class="itin-tabs itin-tabs--panel" id="itinTabs">
       <button class="itin-tab" data-itin="itin1">Itinerary 1 — via Yunnan</button>
       <button class="itin-tab" data-itin="itin2">Itinerary 2 — via Changsha/Zhangjiajie</button>
     </div>
@@ -414,64 +458,64 @@
 <script>
 const CITY_IMAGES = {
   "Beijing": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/e/ef/The_Forbidden_City_-_View_from_Coal_Hill.jpg", caption: "Forbidden City" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Great_Wall_of_China_July_2006.JPG", caption: "Great Wall" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/d/db/Longevity_Hill_of_the_Summer_Palace.jpg", caption: "Summer Palace" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/The_Forbidden_City_-_View_from_Coal_Hill.jpg/330px-The_Forbidden_City_-_View_from_Coal_Hill.jpg", caption: "Forbidden City" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fa/Great_Wall_of_China_July_2006.JPG/330px-Great_Wall_of_China_July_2006.JPG", caption: "Great Wall" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Longevity_Hill_of_the_Summer_Palace.jpg/330px-Longevity_Hill_of_the_Summer_Palace.jpg", caption: "Summer Palace" },
   ],
   "Xi'an": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/8/88/51714-Terracota-Army.jpg", caption: "Terracotta Army" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/3/32/City_wall_of_Xi%27an_51550-Xian_%2827959363326%29.jpg", caption: "City Wall" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/1/13/Giant_Wild_Goose_Pagoda.jpg", caption: "Giant Wild Goose Pagoda" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/88/51714-Terracota-Army.jpg/330px-51714-Terracota-Army.jpg", caption: "Terracotta Army" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/32/City_wall_of_Xi%27an_51550-Xian_%2827959363326%29.jpg/330px-City_wall_of_Xi%27an_51550-Xian_%2827959363326%29.jpg", caption: "City Wall" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Giant_Wild_Goose_Pagoda.jpg/330px-Giant_Wild_Goose_Pagoda.jpg", caption: "Giant Wild Goose Pagoda" },
   ],
   "Chongqing": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/6/64/202308_Hongya_Cave_at_night_from_Qiansimen_Bridge.jpg", caption: "Hongya Cave" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/a/a5/Ciqikou18.JPG", caption: "Ciqikou Ancient Town" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/6/67/Chongqing_Nightscape.jpg", caption: "Chongqing skyline" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/202308_Hongya_Cave_at_night_from_Qiansimen_Bridge.jpg/330px-202308_Hongya_Cave_at_night_from_Qiansimen_Bridge.jpg", caption: "Hongya Cave" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a5/Ciqikou18.JPG/330px-Ciqikou18.JPG", caption: "Ciqikou Ancient Town" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/67/Chongqing_Nightscape.jpg/330px-Chongqing_Nightscape.jpg", caption: "Chongqing skyline" },
   ],
   "Kunming": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/9/97/Green_Lake_Park%2C_Kunming%2C_China_-_DSC03519.JPG", caption: "Green Lake Park" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/e/e8/Shilin%2C_Yunnan_24740.jpg", caption: "Stone Forest" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/7/78/Golden_Temple_Kunming_Gate_2009_07.jpg", caption: "Golden Temple" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/Green_Lake_Park%2C_Kunming%2C_China_-_DSC03519.JPG/330px-Green_Lake_Park%2C_Kunming%2C_China_-_DSC03519.JPG", caption: "Green Lake Park" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e8/Shilin%2C_Yunnan_24740.jpg/330px-Shilin%2C_Yunnan_24740.jpg", caption: "Stone Forest" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/78/Golden_Temple_Kunming_Gate_2009_07.jpg/330px-Golden_Temple_Kunming_Gate_2009_07.jpg", caption: "Golden Temple" },
   ],
   "Jianshui": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/0/0e/Jianshui_Confucian_Temple_-_P1360987.JPG", caption: "Confucian Temple" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/2/22/Zhu_Family_Garden_%2848671110343%29.jpg", caption: "Zhu Family Garden" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/d/d5/Jianshui_-_Chaoyang_Gate_-_P1370485.JPG", caption: "Chaoyang Gate" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Jianshui_Confucian_Temple_-_P1360987.JPG/330px-Jianshui_Confucian_Temple_-_P1360987.JPG", caption: "Confucian Temple" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Zhu_Family_Garden_%2848671110343%29.jpg/330px-Zhu_Family_Garden_%2848671110343%29.jpg", caption: "Zhu Family Garden" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Jianshui_-_Chaoyang_Gate_-_P1370485.JPG/330px-Jianshui_-_Chaoyang_Gate_-_P1370485.JPG", caption: "Chaoyang Gate" },
   ],
   "Guilin": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/9/98/Elephant_Trunk_Hill%2C_Guilin.jpg", caption: "Elephant Trunk Hill" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/f/fa/Reed_Flute_Cave_89145-Guilin_%2830047619307%29.jpg", caption: "Reed Flute Cave" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/8/8c/Li_River_cruise_from_Guilin_to_Yangshuo.JPG", caption: "Li River" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/Karst_peaks_and_bamboo_forest.jpg/330px-Karst_peaks_and_bamboo_forest.jpg", caption: "Li River karst peaks" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b9/Hill_Fuboshan_in_Guilin.jpg/330px-Hill_Fuboshan_in_Guilin.jpg", caption: "Fubo Hill" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/Li_River_cruise_from_Guilin_to_Yangshuo.JPG/330px-Li_River_cruise_from_Guilin_to_Yangshuo.JPG", caption: "Li River" },
   ],
   "Yangshuo": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/f/fb/West_Street_Yangshuo.jpg", caption: "West Street" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/5/53/Li_River_and_mountains_in_Yangshuo_County%2C_Guilin52.jpg", caption: "Karst peaks" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/c/c4/Yangshuo-4335.JPG", caption: "Countryside" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fb/West_Street_Yangshuo.jpg/330px-West_Street_Yangshuo.jpg", caption: "West Street" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/5/53/Li_River_and_mountains_in_Yangshuo_County%2C_Guilin52.jpg/330px-Li_River_and_mountains_in_Yangshuo_County%2C_Guilin52.jpg", caption: "Karst peaks" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Yangshuo-4335.JPG/330px-Yangshuo-4335.JPG", caption: "Countryside" },
   ],
   "Shanghai": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/6/64/Shanghai_skyline_from_the_bund.jpg", caption: "The Bund" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/6/6e/Yuyuan_Garden_3.jpg", caption: "Yuyuan Garden" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/f/fb/Shanghai_Oriental_Pearl_Tower-20150516-RM-130617.jpg", caption: "Oriental Pearl Tower" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Shanghai_skyline_from_the_bund.jpg/330px-Shanghai_skyline_from_the_bund.jpg", caption: "The Bund" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/2014.11.15.181427_Nanjing_Road_Pedestrian_Zone_Shanghai.jpg/330px-2014.11.15.181427_Nanjing_Road_Pedestrian_Zone_Shanghai.jpg", caption: "Nanjing Road at night" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Pudong_Skyline_from_The_Bund_20260417.jpg/330px-Pudong_Skyline_from_The_Bund_20260417.jpg", caption: "Pudong skyline" },
   ],
   "Suzhou": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/f/f2/20090905_Suzhou_Humble_Administrator%27s_Garden_4536.jpg", caption: "Humble Administrator's Garden" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/0/01/20240203_Lingering_Garden_01.jpg", caption: "Lingering Garden" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/1/11/A_gallery_bridge_in_Pingjiang_Road%2C_Gusu%2C_Suzhou%2C_Jiangsu%2C_China%2C_215000.jpg", caption: "Pingjiang Road canal" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/20090905_Suzhou_Humble_Administrator%27s_Garden_4536.jpg/330px-20090905_Suzhou_Humble_Administrator%27s_Garden_4536.jpg", caption: "Humble Administrator's Garden" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/01/20240203_Lingering_Garden_01.jpg/330px-20240203_Lingering_Garden_01.jpg", caption: "Lingering Garden" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/A_gallery_bridge_in_Pingjiang_Road%2C_Gusu%2C_Suzhou%2C_Jiangsu%2C_China%2C_215000.jpg/330px-A_gallery_bridge_in_Pingjiang_Road%2C_Gusu%2C_Suzhou%2C_Jiangsu%2C_China%2C_215000.jpg", caption: "Pingjiang Road canal" },
   ],
   "Changsha": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/1/1b/20231002_Yuelu_Shuyuan_%28084135%29.jpg", caption: "Yuelu Academy" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/7/74/Young_Mao_Zedong_statue%2C_2010110303.jpg", caption: "Orange Isle" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/3/36/New_building_of_Hunan_Provincial_Museum_in_February_2018%2C_picture2.jpg", caption: "Hunan Provincial Museum" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/20231002_Yuelu_Shuyuan_%28084135%29.jpg/330px-20231002_Yuelu_Shuyuan_%28084135%29.jpg", caption: "Yuelu Academy" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Young_Mao_Zedong_statue%2C_2010110303.jpg/330px-Young_Mao_Zedong_statue%2C_2010110303.jpg", caption: "Orange Isle" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/3/36/New_building_of_Hunan_Provincial_Museum_in_February_2018%2C_picture2.jpg/330px-New_building_of_Hunan_Provincial_Museum_in_February_2018%2C_picture2.jpg", caption: "Hunan Provincial Museum" },
   ],
   "Zhangjiajie": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/c/c4/The_sandstone_pillars_of_Wulingyuan_%2853963199701%29.jpg", caption: "Wulingyuan pillars" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/7/7b/Zhangjiajie_Glass_Bridge_20190726.jpg", caption: "Glass Bridge" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/8/8f/Tianmen_38258-Zhangjiajie_%2849047523437%29.jpg", caption: "Tianmen Cave" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/The_sandstone_pillars_of_Wulingyuan_%2853963199701%29.jpg/330px-The_sandstone_pillars_of_Wulingyuan_%2853963199701%29.jpg", caption: "Wulingyuan pillars" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/7/7b/Zhangjiajie_Glass_Bridge_20190726.jpg/330px-Zhangjiajie_Glass_Bridge_20190726.jpg", caption: "Glass Bridge" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8f/Tianmen_38258-Zhangjiajie_%2849047523437%29.jpg/330px-Tianmen_38258-Zhangjiajie_%2849047523437%29.jpg", caption: "Tianmen Cave" },
   ],
   "Nanchang": [
-    { url: "https://upload.wikimedia.org/wikipedia/commons/1/1e/Pavilion_of_Prince_Teng%2C_Nanchang%2C_China1.jpg", caption: "Tengwang Pavilion" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/8/82/Nanchang_Skyline.jpg", caption: "Riverside skyline" },
-    { url: "https://upload.wikimedia.org/wikipedia/commons/2/22/StarOfNanchang20070718.jpg", caption: "Star of Nanchang" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/Pavilion_of_Prince_Teng%2C_Nanchang%2C_China1.jpg/330px-Pavilion_of_Prince_Teng%2C_Nanchang%2C_China1.jpg", caption: "Tengwang Pavilion" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/82/Nanchang_Skyline.jpg/330px-Nanchang_Skyline.jpg", caption: "Riverside skyline" },
+    { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/StarOfNanchang20070718.jpg/330px-StarOfNanchang20070718.jpg", caption: "Star of Nanchang" },
   ],
 };
 
@@ -505,7 +549,7 @@ window.carouselNav = function(id, delta) {
   const count = +el.dataset.count;
   let idx = (+el.dataset.index + delta + count) % count;
   el.dataset.index = idx;
-  el.querySelector('.carousel__track').style.transform = `translateX(-${idx * 240}px)`;
+  el.querySelector('.carousel__track').style.transform = `translateX(-${idx * 150}px)`;
   el.querySelectorAll('.carousel__dot').forEach((d, i) => d.classList.toggle('is-active', i === idx));
 };
 
@@ -674,7 +718,16 @@ function render(itinId) {
   const markers = {};
   stops.forEach(stop => {
     const marker = L.marker(stop.coord, { icon: markerIcon(stop) }).addTo(layerGroup);
-    marker.bindPopup(`${buildCarousel(stop.name)}<p class="popup__name">${stop.name}</p><p class="popup__dates">${stop.dates}</p><p class="popup__note">${stop.note}</p>`, { minWidth: 240, maxWidth: 240 });
+    marker.bindPopup(`
+      <div class="popup">
+        <div class="popup__info">
+          <p class="popup__name">${stop.name}</p>
+          <p class="popup__dates">${stop.dates}</p>
+          <p class="popup__note">${stop.note}</p>
+        </div>
+        <div class="popup__media">${buildCarousel(stop.name)}</div>
+      </div>
+    `, { minWidth: 380, maxWidth: 380, autoPan: true, autoPanPadding: [40, 40] });
     markers[stop.id] = marker;
   });
   legs.forEach(leg => {
@@ -706,7 +759,7 @@ function render(itinId) {
     `;
     el.addEventListener('click', () => {
       map.flyTo(stop.coord, 7, { duration: 0.8 });
-      markers[stop.id].openPopup();
+      map.once('moveend', () => markers[stop.id].openPopup());
       document.querySelectorAll('.stop').forEach(s => s.classList.remove('is-active'));
       el.classList.add('is-active');
     });
