@@ -61,7 +61,12 @@
   a { color: inherit; }
 
   .masthead {
-    padding: 2rem clamp(1rem, 4vw, 3rem) 1.25rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.5rem;
+    padding: 1.5rem clamp(1rem, 4vw, 3rem) 1.25rem;
     border-bottom: 1px solid var(--line);
   }
   .masthead__eyebrow {
@@ -75,17 +80,20 @@
   .masthead__title {
     font-family: 'Big Shoulders Display', sans-serif;
     font-weight: 900;
-    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    font-size: clamp(2rem, 5vw, 3.4rem);
     line-height: 0.92;
     letter-spacing: -0.01em;
-    margin: 0 0 0.6rem;
+    margin: 0;
     text-wrap: balance;
   }
-  .masthead__sub {
-    font-size: 1rem;
-    color: var(--text-muted);
-    max-width: 62ch;
-    margin: 0;
+  .masthead__meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+  }
+  @media (max-width: 640px) {
+    .masthead__meta { align-items: flex-start; }
   }
 
   .stats {
@@ -133,18 +141,16 @@
 
   .legend {
     display: flex;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    gap: 1rem;
-    padding: 0.6rem clamp(1rem, 4vw, 1.5rem);
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.7rem;
     font-family: 'IBM Plex Mono', monospace;
-    font-size: 0.7rem;
+    font-size: 0.68rem;
     color: var(--text-muted);
-    border-bottom: 1px solid var(--line);
     align-items: center;
     white-space: nowrap;
   }
-  .legend__swatch { display: inline-flex; align-items: center; gap: 0.35rem; flex: none; }
+  .legend__swatch { display: inline-flex; align-items: center; gap: 0.3rem; flex: none; }
   .legend__line { display: inline-block; width: 18px; height: 0; border-top: 3px solid var(--rail); }
   .legend__line--flag { border-top: 3px dashed var(--rail); }
 
@@ -281,12 +287,11 @@
   .totalbar {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem 1.5rem;
-    padding: 0.6rem clamp(1rem, 4vw, 1.5rem);
+    justify-content: flex-end;
+    gap: 0.3rem 0.9rem;
     font-family: 'IBM Plex Mono', monospace;
     font-size: 0.72rem;
     color: var(--text-muted);
-    border-bottom: 1px solid var(--line);
   }
   .totalbar strong { color: var(--text); font-variant-numeric: tabular-nums; }
   .totalbar .savings { color: var(--tag-nature); }
@@ -312,18 +317,20 @@
 <body>
 
 <header class="masthead">
-  <p class="masthead__eyebrow">Sep 30 – Oct 28 · 2026</p>
-  <h1 class="masthead__title">China Trip 2026</h1>
+  <div>
+    <p class="masthead__eyebrow">Sep 30 – Oct 28 · 2026</p>
+    <h1 class="masthead__title">China Trip 2026</h1>
+  </div>
+  <div class="masthead__meta">
+    <div class="legend">
+      <span class="legend__swatch"><span class="hsr-pill hsr-pill--g">G</span> Gaotie (350km/h)</span>
+      <span class="legend__swatch"><span class="hsr-pill hsr-pill--d">D</span> Dongche (250km/h)</span>
+      <span class="legend__swatch"><span class="hsr-pill hsr-pill--c">C</span> Chengji (200km/h)</span>
+      <span class="legend__swatch"><span class="legend__line legend__line--flag"></span> long day</span>
+    </div>
+    <div class="totalbar" id="totalbar"></div>
+  </div>
 </header>
-
-<div class="legend">
-  <span class="legend__swatch"><span class="hsr-pill hsr-pill--g">G</span> Gaotie</span>
-  <span class="legend__swatch"><span class="hsr-pill hsr-pill--d">D</span> Dongche</span>
-  <span class="legend__swatch"><span class="hsr-pill hsr-pill--c">C</span> Chengji</span>
-  <span class="legend__swatch"><span class="legend__line legend__line--flag"></span> long day</span>
-</div>
-
-<div class="totalbar" id="totalbar"></div>
 
 <div class="layout">
   <div id="map"></div>
