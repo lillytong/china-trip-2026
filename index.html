@@ -245,6 +245,36 @@
   }
   .hsr-pill--g { background: var(--rail); }
   .hsr-pill--d { background: var(--tag-city); }
+  .hsr-pill--c { background: var(--tag-nature); }
+
+  .itin-tabs { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+  .itin-tab {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    padding: 0.45rem 1rem;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--card);
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .itin-tab:hover { color: var(--text); }
+  .itin-tab.is-active { background: var(--rail); color: var(--card); border-color: var(--rail); }
+
+  .totalbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.5rem;
+    padding: 0.6rem clamp(1rem, 4vw, 1.5rem);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--line);
+  }
+  .totalbar strong { color: var(--text); font-variant-numeric: tabular-nums; }
+  .totalbar .savings { color: var(--tag-nature); }
 
   footer {
     padding: 1.2rem clamp(1rem, 4vw, 3rem) 2rem;
@@ -269,14 +299,22 @@
 <header class="masthead">
   <p class="masthead__eyebrow">Sep 30 – Oct 28 · 2026</p>
   <h1 class="masthead__title">China Trip 2026</h1>
+  <p class="masthead__sub" id="itinSubtitle"></p>
+  <div class="itin-tabs" id="itinTabs">
+    <button class="itin-tab" data-itin="itin1">Itinerary 1 — via Yunnan</button>
+    <button class="itin-tab" data-itin="itin2">Itinerary 2 — via Changsha/Zhangjiajie</button>
+  </div>
 </header>
 
 <div class="legend">
   <span class="legend__swatch"><span class="hsr-pill hsr-pill--g">G</span> Gaotie — bullet, up to 350km/h</span>
   <span class="legend__swatch"><span class="hsr-pill hsr-pill--d">D</span> Dongche — EMU, up to 250km/h</span>
+  <span class="legend__swatch"><span class="hsr-pill hsr-pill--c">C</span> Chengji — intercity EMU</span>
   <span class="legend__swatch"><span class="legend__line legend__line--flag"></span> Long single-seat day (still direct, no transfer)</span>
   <span class="legend__swatch">Every leg below is 12306-verified HSR — no conventional rail.</span>
 </div>
+
+<div class="totalbar" id="totalbar"></div>
 
 <div class="layout">
   <div id="map"></div>
@@ -287,51 +325,110 @@
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 <script>
-const stops = [
-  { id: 'bj1', num: 1, name: 'Beijing', dates: 'Sep 30 – Oct 7', tag: 'culture', kind: 'stop',
-    note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead.",
-    coord: [39.9042, 116.4074] },
-  { id: 'xa', num: 2, name: "Xi'an", dates: 'Oct 7 – 10', tag: 'culture', kind: 'stop',
-    note: 'The Terracotta Army, then two wheels around the old City Wall.',
-    coord: [34.3416, 108.9398] },
-  { id: 'cq', num: 3, name: 'Chongqing', dates: 'Oct 10 – 13', tag: 'city', kind: 'stop',
-    note: 'Cliffside mountain city, cable cars over the river, and proper Chongqing hotpot.',
-    coord: [29.5630, 106.5516] },
-  { id: 'km', num: 4, name: 'Kunming', dates: 'transit', tag: 'city', kind: 'waypoint',
-    note: 'Rail junction into Yunnan — not a stop, just the way through.',
-    coord: [24.8801, 102.8329] },
-  { id: 'dl', num: 5, name: 'Dali', dates: 'Oct 13 – 17', tag: 'nature', kind: 'stop',
-    note: "Erhai Lake and the old town — Yunnan's one stop on this trip.",
-    coord: [25.6065, 100.2676] },
-  { id: 'yy', num: 6, name: 'Guilin / Yangshuo', dates: 'Oct 17 – 20', tag: 'nature', kind: 'stop',
-    note: 'Li River karst peaks — cycling the countryside between rice paddies.',
-    coord: [24.7770, 110.4996] },
-  { id: 'sh', num: 7, name: 'Shanghai', dates: 'Oct 20 – 24', tag: 'city', kind: 'stop',
-    note: 'Bund skyline, French Concession streets, and a ride on the Maglev.',
-    coord: [31.2304, 121.4737] },
-  { id: 'bj2', num: 8, name: 'Beijing', dates: 'Oct 25 – 28', tag: 'culture', kind: 'stop',
-    note: 'Back to family for the final days before flying out Oct 28.',
-    coord: [39.9042, 116.4074] },
-];
+const itineraries = {
+  itin1: {
+    label: 'Itinerary 1',
+    subtitle: "Via Yunnan — Beijing · Xi'an · Chongqing · Kunming/Dali · Guilin · Shanghai",
+    stops: [
+      { id: 'bj1', num: 1, name: 'Beijing', dates: 'Sep 30 – Oct 7', tag: 'culture', kind: 'stop',
+        note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead.",
+        coord: [39.9042, 116.4074] },
+      { id: 'xa', num: 2, name: "Xi'an", dates: 'Oct 7 – 10', tag: 'culture', kind: 'stop',
+        note: 'The Terracotta Army, then two wheels around the old City Wall.',
+        coord: [34.3416, 108.9398] },
+      { id: 'cq', num: 3, name: 'Chongqing', dates: 'Oct 10 – 13', tag: 'city', kind: 'stop',
+        note: 'Cliffside mountain city, cable cars over the river, and proper Chongqing hotpot.',
+        coord: [29.5630, 106.5516] },
+      { id: 'km', num: 4, name: 'Kunming', dates: 'transit', tag: 'city', kind: 'waypoint',
+        note: 'Rail junction into Yunnan — not a stop, just the way through.',
+        coord: [24.8801, 102.8329] },
+      { id: 'dl', num: 5, name: 'Dali', dates: 'Oct 13 – 17', tag: 'nature', kind: 'stop',
+        note: "Erhai Lake and the old town — Yunnan's one stop on this trip.",
+        coord: [25.6065, 100.2676] },
+      { id: 'yy', num: 6, name: 'Guilin / Yangshuo', dates: 'Oct 17 – 20', tag: 'nature', kind: 'stop',
+        note: 'Li River karst peaks — cycling the countryside between rice paddies.',
+        coord: [24.7770, 110.4996] },
+      { id: 'sh', num: 7, name: 'Shanghai', dates: 'Oct 20 – 24', tag: 'city', kind: 'stop',
+        note: 'Bund skyline, French Concession streets, and a ride on the Maglev.',
+        coord: [31.2304, 121.4737] },
+      { id: 'bj2', num: 8, name: 'Beijing', dates: 'Oct 25 – 28', tag: 'culture', kind: 'stop',
+        note: 'Back to family for the final days before flying out Oct 28.',
+        coord: [39.9042, 116.4074] },
+    ],
+    legs: [
+      { from: 'bj1', to: 'xa', train: 'G351', route: "Beijing West → Xi'an North", dep: '07:55', arr: '12:05', duration: '4h10m', cls: 'G', flag: false },
+      { from: 'xa', to: 'cq', train: 'D997', route: "Xi'an North → Chongqing West", dep: '05:18', arr: '10:22', duration: '5h04m', cls: 'D', flag: false },
+      { from: 'cq', to: 'km', train: 'G2873', route: 'Chongqing West → Kunming South', dep: '08:49', arr: '13:58', duration: '5h09m', cls: 'G', flag: false },
+      { from: 'km', to: 'dl', train: 'D8653', route: 'Kunming South → Dali', dep: '06:50', arr: '09:08', duration: '2h18m', cls: 'D', flag: false },
+      { from: 'dl', to: 'yy', train: 'D3934', route: 'Dali → Guilin North (via Kunming South)', dep: '08:37', arr: '18:52', duration: '10h15m', cls: 'D', flag: true,
+        note: 'Through-train — stops ~5min at Kunming South, no change of train. Longest day of the trip; alt: break it with an overnight in Kunming, then a fresh ~4.5h morning train to Guilin.' },
+      { from: 'yy', to: 'sh', train: 'G264', route: 'Guilin → Shanghai Hongqiao', dep: '12:05', arr: '19:30', duration: '7h25m', cls: 'G', flag: false },
+      { from: 'sh', to: 'bj2', train: 'G2', route: 'Shanghai Hongqiao → Beijing South', dep: '06:43', arr: '11:32', duration: '4h49m', cls: 'G', flag: false },
+    ],
+  },
+  itin2: {
+    label: 'Itinerary 2',
+    subtitle: "Via Changsha/Zhangjiajie — Beijing · Xi'an · Chongqing · Guilin · Changsha · Zhangjiajie · Shanghai. No Yunnan.",
+    stops: [
+      { id: 'bj1', num: 1, name: 'Beijing', dates: 'Sep 30 – Oct 7', tag: 'culture', kind: 'stop',
+        note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead.",
+        coord: [39.9042, 116.4074] },
+      { id: 'xa', num: 2, name: "Xi'an", dates: 'Oct 7 – 10', tag: 'culture', kind: 'stop',
+        note: 'The Terracotta Army, then two wheels around the old City Wall.',
+        coord: [34.3416, 108.9398] },
+      { id: 'cq', num: 3, name: 'Chongqing', dates: 'Oct 10 – 13', tag: 'city', kind: 'stop',
+        note: 'Cliffside mountain city, cable cars over the river, and proper Chongqing hotpot.',
+        coord: [29.5630, 106.5516] },
+      { id: 'yy', num: 4, name: 'Guilin / Yangshuo', dates: 'Oct 13 – 16', tag: 'nature', kind: 'stop',
+        note: 'Li River karst peaks — cycling the countryside between rice paddies. Reached direct from Chongqing this time, no Yunnan detour.',
+        coord: [24.7770, 110.4996] },
+      { id: 'cs', num: 5, name: 'Changsha', dates: 'Oct 16 – 17', tag: 'culture', kind: 'stop',
+        note: "Hunan's capital — Yuelu Mountain, fiery Hunan food, and the gateway to Zhangjiajie. Brief stop.",
+        coord: [28.2282, 112.9388] },
+      { id: 'zj', num: 6, name: 'Zhangjiajie', dates: 'Oct 17 – 20', tag: 'nature', kind: 'stop',
+        note: 'Sandstone pillar mountains, glass bridge, serious hiking — the "Avatar" scenery. Distinct terrain from Guilin, not redundant.',
+        coord: [29.1274, 110.4790] },
+      { id: 'sh', num: 7, name: 'Shanghai', dates: 'Oct 20 – 24', tag: 'city', kind: 'stop',
+        note: 'Bund skyline, French Concession streets, and a ride on the Maglev.',
+        coord: [31.2304, 121.4737] },
+      { id: 'bj2', num: 8, name: 'Beijing', dates: 'Oct 25 – 28', tag: 'culture', kind: 'stop',
+        note: 'Back to family for the final days before flying out Oct 28.',
+        coord: [39.9042, 116.4074] },
+    ],
+    legs: [
+      { from: 'bj1', to: 'xa', train: 'G351', route: "Beijing West → Xi'an North", dep: '07:55', arr: '12:05', duration: '4h10m', cls: 'G', flag: false },
+      { from: 'xa', to: 'cq', train: 'D997', route: "Xi'an North → Chongqing West", dep: '05:18', arr: '10:22', duration: '5h04m', cls: 'D', flag: false },
+      { from: 'cq', to: 'yy', train: 'G3723', route: 'Chongqing West → Guilin West', dep: '10:06', arr: '13:49', duration: '3h43m', cls: 'G', flag: false },
+      { from: 'yy', to: 'cs', train: 'G2066', route: 'Guilin → Changsha South', dep: '10:15', arr: '13:12', duration: '2h57m', cls: 'G', flag: false },
+      { from: 'cs', to: 'zj', train: 'C7752', route: 'Changsha → Zhangjiajie West', dep: '07:10', arr: '09:02', duration: '1h52m', cls: 'C', flag: false },
+      { from: 'zj', to: 'sh', train: 'G221', route: 'Zhangjiajie West → Shanghai Hongqiao', dep: '14:39', arr: '21:57', duration: '7h18m', cls: 'G', flag: true,
+        note: 'Direct — no backtrack through Changsha needed. Longest single leg of this itinerary, but under Itinerary 1\'s longest day by almost 3 hours.' },
+      { from: 'sh', to: 'bj2', train: 'G2', route: 'Shanghai Hongqiao → Beijing South', dep: '06:43', arr: '11:32', duration: '4h49m', cls: 'G', flag: false },
+    ],
+  },
+};
 
-const legs = [
-  { from: 'bj1', to: 'xa', train: 'G351', route: 'Beijing West → Xi\'an North', dep: '07:55', arr: '12:05', duration: '4h10m', cls: 'G', flag: false },
-  { from: 'xa', to: 'cq', train: 'D997', route: 'Xi\'an North → Chongqing West', dep: '05:18', arr: '10:22', duration: '5h04m', cls: 'D', flag: false },
-  { from: 'cq', to: 'km', train: 'G2873', route: 'Chongqing West → Kunming South', dep: '08:49', arr: '13:58', duration: '5h09m', cls: 'G', flag: false },
-  { from: 'km', to: 'dl', train: 'D8653', route: 'Kunming South → Dali', dep: '06:50', arr: '09:08', duration: '2h18m', cls: 'D', flag: false },
-  { from: 'dl', to: 'yy', train: 'D3934', route: 'Dali → Guilin North (via Kunming South)', dep: '08:37', arr: '18:52', duration: '10h15m', cls: 'D', flag: true,
-    note: 'Through-train — stops ~5min at Kunming South, no change of train. Longest day of the trip; alt: break it with an overnight in Kunming, then a fresh ~4.5h morning train to Guilin.' },
-  { from: 'yy', to: 'sh', train: 'G264', route: 'Guilin → Shanghai Hongqiao', dep: '12:05', arr: '19:30', duration: '7h25m', cls: 'G', flag: false },
-  { from: 'sh', to: 'bj2', train: 'G2', route: 'Shanghai Hongqiao → Beijing South', dep: '06:43', arr: '11:32', duration: '4h49m', cls: 'G', flag: false },
-];
+function parseDuration(str) {
+  const h = /(\d+)h/.exec(str), m = /(\d+)m/.exec(str);
+  return (h ? +h[1] * 60 : 0) + (m ? +m[1] : 0);
+}
+function formatDuration(mins) {
+  return `${Math.floor(mins / 60)}h${String(mins % 60).padStart(2, '0')}m`;
+}
 
-const byId = Object.fromEntries(stops.map(s => [s.id, s]));
+const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+const pillColor = cls => cls === 'G' ? cssVar('--rail') : cls === 'D' ? cssVar('--tag-city') : cssVar('--tag-nature');
 
 const map = L.map('map', { scrollWheelZoom: true }).setView([32, 108], 4.4);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
   maxZoom: 18,
   attribution: 'Tiles &copy; Esri &mdash; Source: Esri, HERE, Garmin, USGS, Intermap, INCREMENT P, NRCan, Esri Japan, METI, Esri China (Hong Kong), Esri Korea, Esri (Thailand), NGCC, &copy; OpenStreetMap contributors, GIS User Community'
 }).addTo(map);
+
+let layerGroup = L.layerGroup().addTo(map);
+const timeline = document.getElementById('timeline');
+const totalbar = document.getElementById('totalbar');
+const subtitleEl = document.getElementById('itinSubtitle');
 
 function markerIcon(stop) {
   const cls = stop.kind === 'waypoint' ? 'stop-marker stop-marker--waypoint' : 'stop-marker';
@@ -347,68 +444,82 @@ function markerIcon(stop) {
   });
 }
 
-const markers = {};
-stops.forEach(stop => {
-  const icon = markerIcon(stop);
-  const marker = L.marker(stop.coord, { icon }).addTo(map);
-  marker.bindPopup(
-    `<p class="popup__name">${stop.name}</p><p class="popup__dates">${stop.dates}</p><p class="popup__note">${stop.note}</p>`
-  );
-  markers[stop.id] = marker;
-});
+function render(itinId) {
+  const itin = itineraries[itinId];
+  const { stops, legs } = itin;
+  const byId = Object.fromEntries(stops.map(s => [s.id, s]));
 
-const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  document.querySelectorAll('.itin-tab').forEach(t => t.classList.toggle('is-active', t.dataset.itin === itinId));
+  subtitleEl.textContent = itin.subtitle;
 
-legs.forEach(leg => {
-  const from = byId[leg.from], to = byId[leg.to];
-  const style = {
-    color: leg.cls === 'G' ? cssVar('--rail') : cssVar('--tag-city'),
-    weight: 3,
-    dashArray: leg.flag ? '9 6' : null,
-    opacity: 0.9,
-  };
-  const line = L.polyline([from.coord, to.coord], style).addTo(map);
-  line.bindTooltip(`${leg.train} · ${leg.route} · ${leg.dep}–${leg.arr} · ${leg.duration}`, { sticky: true });
-});
-
-const timeline = document.getElementById('timeline');
-stops.forEach(stop => {
-  const el = document.createElement('div');
-  el.className = 'stop' + (stop.kind === 'waypoint' ? ' stop--waypoint' : '');
-  el.innerHTML = `
-    <div class="stop__num">${stop.kind === 'waypoint' ? '·' : stop.num}</div>
-    <div class="stop__body">
-      <div class="stop__top">
-        <span class="stop__name">${stop.name}</span>
-        <span class="stop__dates">${stop.dates}</span>
-      </div>
-      <p class="stop__note">${stop.note}</p>
-      <span class="tag tag--${stop.tag}">${stop.tag}</span>
-    </div>
-  `;
-  el.addEventListener('click', () => {
-    map.flyTo(stop.coord, 7, { duration: 0.8 });
-    markers[stop.id].openPopup();
-    document.querySelectorAll('.stop').forEach(s => s.classList.remove('is-active'));
-    el.classList.add('is-active');
+  layerGroup.clearLayers();
+  const markers = {};
+  stops.forEach(stop => {
+    const marker = L.marker(stop.coord, { icon: markerIcon(stop) }).addTo(layerGroup);
+    marker.bindPopup(`<p class="popup__name">${stop.name}</p><p class="popup__dates">${stop.dates}</p><p class="popup__note">${stop.note}</p>`);
+    markers[stop.id] = marker;
   });
-  timeline.appendChild(el);
+  legs.forEach(leg => {
+    const from = byId[leg.from], to = byId[leg.to];
+    const line = L.polyline([from.coord, to.coord], {
+      color: pillColor(leg.cls), weight: 3, dashArray: leg.flag ? '9 6' : null, opacity: 0.9,
+    }).addTo(layerGroup);
+    line.bindTooltip(`${leg.train} · ${leg.route} · ${leg.dep}–${leg.arr} · ${leg.duration}`, { sticky: true });
+  });
+  map.setView([32, 108], 4.4);
 
-  const leg = legs.find(l => l.from === stop.id);
-  if (leg) {
-    const legEl = document.createElement('div');
-    legEl.className = 'leg' + (leg.flag ? ' leg--flag' : '');
-    legEl.innerHTML = `
-      <span class="hsr-pill hsr-pill--${leg.cls.toLowerCase()}">${leg.cls}</span>
-      <div class="leg__body">
-        <span class="leg__route">${leg.train} · ${leg.route}</span>
-        <span class="leg__meta">${leg.dep}–${leg.arr} · ${leg.duration}${leg.flag ? ' · longest day' : ''}</span>
-        ${leg.note ? `<span class="leg__note">${leg.note}</span>` : ''}
+  const totalMins = legs.reduce((sum, l) => sum + parseDuration(l.duration), 0);
+  const otherKey = itinId === 'itin1' ? 'itin2' : 'itin1';
+  const otherMins = itineraries[otherKey].legs.reduce((sum, l) => sum + parseDuration(l.duration), 0);
+  const diff = totalMins - otherMins;
+  totalbar.innerHTML = `<span>Total rail time: <strong>${formatDuration(totalMins)}</strong> across ${legs.length} legs</span>` +
+    (diff !== 0 ? `<span class="savings">${diff < 0 ? formatDuration(-diff) + ' less' : formatDuration(diff) + ' more'} than ${itineraries[otherKey].label}</span>` : '');
+
+  timeline.innerHTML = '';
+  stops.forEach(stop => {
+    const el = document.createElement('div');
+    el.className = 'stop' + (stop.kind === 'waypoint' ? ' stop--waypoint' : '');
+    el.innerHTML = `
+      <div class="stop__num">${stop.kind === 'waypoint' ? '·' : stop.num}</div>
+      <div class="stop__body">
+        <div class="stop__top">
+          <span class="stop__name">${stop.name}</span>
+          <span class="stop__dates">${stop.dates}</span>
+        </div>
+        <p class="stop__note">${stop.note}</p>
+        <span class="tag tag--${stop.tag}">${stop.tag}</span>
       </div>
     `;
-    timeline.appendChild(legEl);
-  }
+    el.addEventListener('click', () => {
+      map.flyTo(stop.coord, 7, { duration: 0.8 });
+      markers[stop.id].openPopup();
+      document.querySelectorAll('.stop').forEach(s => s.classList.remove('is-active'));
+      el.classList.add('is-active');
+    });
+    timeline.appendChild(el);
+
+    const leg = legs.find(l => l.from === stop.id);
+    if (leg) {
+      const legEl = document.createElement('div');
+      legEl.className = 'leg' + (leg.flag ? ' leg--flag' : '');
+      legEl.innerHTML = `
+        <span class="hsr-pill hsr-pill--${leg.cls.toLowerCase()}">${leg.cls}</span>
+        <div class="leg__body">
+          <span class="leg__route">${leg.train} · ${leg.route}</span>
+          <span class="leg__meta">${leg.dep}–${leg.arr} · ${leg.duration}${leg.flag ? ' · longest day' : ''}</span>
+          ${leg.note ? `<span class="leg__note">${leg.note}</span>` : ''}
+        </div>
+      `;
+      timeline.appendChild(legEl);
+    }
+  });
+}
+
+document.querySelectorAll('.itin-tab').forEach(tab => {
+  tab.addEventListener('click', () => render(tab.dataset.itin));
 });
+
+render('itin1');
 </script>
 </body>
 </html>
