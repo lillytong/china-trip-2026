@@ -72,6 +72,7 @@
     gap: 0.75rem 1.5rem;
     padding: 1.5rem clamp(1rem, 4vw, 3rem) 1.25rem;
     border-bottom: 1px solid var(--line);
+    transition: padding 200ms ease;
   }
   .masthead__eyebrow {
     font-family: 'IBM Plex Mono', monospace;
@@ -80,6 +81,7 @@
     text-transform: uppercase;
     color: var(--rail);
     margin: 0 0 0.4rem;
+    transition: font-size 200ms ease, margin 200ms ease, opacity 150ms ease;
   }
   .masthead__title {
     font-family: 'Big Shoulders Display', sans-serif;
@@ -89,6 +91,7 @@
     letter-spacing: -0.01em;
     margin: 0;
     text-wrap: balance;
+    transition: font-size 200ms ease;
   }
   .masthead__meta {
     display: flex;
@@ -98,6 +101,12 @@
   }
   @media (max-width: 640px) {
     .masthead__meta { align-items: flex-start; }
+  }
+  @media (max-width: 880px) {
+    .masthead--compact { padding-top: 0.55rem; padding-bottom: 0.55rem; gap: 0.4rem 1rem; }
+    .masthead--compact .masthead__eyebrow { font-size: 0; margin: 0; opacity: 0; }
+    .masthead--compact .masthead__title { font-size: 1.15rem; }
+    .masthead--compact .legend { display: none; }
   }
 
   .stats {
@@ -342,16 +351,16 @@
   .leaflet-popup-tip { background: var(--card); }
   .leaflet-popup-content { margin: 0; width: 380px !important; }
   .popup { display: flex; align-items: stretch; gap: 0; }
-  .popup__info { flex: 1; min-width: 0; padding: 0.7rem 0.75rem; display: flex; flex-direction: column; justify-content: center; }
-  .popup__media { flex: none; }
-  .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.1rem; margin: 0 0 0.2rem; }
-  .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin: 0 0 0.4rem; }
-  .popup__note { font-size: 0.8rem; margin: 0; line-height: 1.35; }
+  .popup__info { flex: 0 0 128px; min-width: 0; padding: 0.55rem 0.6rem; display: flex; flex-direction: column; justify-content: center; }
+  .popup__media { flex: 1; min-width: 0; }
+  .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.05rem; line-height: 1.1; margin: 0 0 0.1rem; }
+  .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin: 0 0 0.25rem; }
+  .popup__note { font-size: 0.76rem; margin: 0; line-height: 1.25; }
 
   .carousel {
     position: relative;
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     background: var(--ink);
     border-radius: 0 6px 6px 0;
@@ -361,7 +370,7 @@
     height: 100%;
     transition: transform 220ms ease;
   }
-  .carousel__slide { flex: none; width: 150px; height: 100%; position: relative; }
+  .carousel__slide { flex: none; width: 100%; height: 100%; position: relative; }
   .carousel__img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .carousel__caption {
     position: absolute;
@@ -549,7 +558,7 @@ window.carouselNav = function(id, delta) {
   const count = +el.dataset.count;
   let idx = (+el.dataset.index + delta + count) % count;
   el.dataset.index = idx;
-  el.querySelector('.carousel__track').style.transform = `translateX(-${idx * 150}px)`;
+  el.querySelector('.carousel__track').style.transform = `translateX(-${idx * 100}%)`;
   el.querySelectorAll('.carousel__dot').forEach((d, i) => d.classList.toggle('is-active', i === idx));
 };
 
@@ -785,6 +794,11 @@ function render(itinId) {
 document.querySelectorAll('.itin-tab').forEach(tab => {
   tab.addEventListener('click', () => render(tab.dataset.itin));
 });
+
+const masthead = document.querySelector('.masthead');
+document.getElementById('timeline').addEventListener('scroll', e => {
+  masthead.classList.toggle('masthead--compact', e.target.scrollTop > 8);
+}, { passive: true });
 
 render('itin1');
 </script>
