@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>China 2026 — Rail Loop</title>
+<meta name="description" content="A 30-day, mostly-high-speed-rail loop through China — Beijing, Xi'an, Chongqing, Guilin/Yangshuo, Yunnan, and Shanghai.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<style>
+  :root {
+    --ink: #10151f;
+    --paper: #eef1ea;
+    --card: #ffffff;
+    --text: #1b2430;
+    --text-muted: #5b6670;
+    --rail: #c8102e;
+    --rail-soft: rgba(200,16,46,0.12);
+    --bus: #a8790a;
+    --bus-soft: rgba(168,121,10,0.14);
+    --line: rgba(27,36,48,0.12);
+    --tag-culture: #6a4fa0;
+    --tag-culture-soft: rgba(106,79,160,0.12);
+    --tag-nature: #3c6e5c;
+    --tag-nature-soft: rgba(60,110,92,0.12);
+    --tag-city: #1d4e89;
+    --tag-city-soft: rgba(29,78,137,0.12);
+    --shadow: 0 1px 2px rgba(16,21,31,0.06), 0 8px 24px rgba(16,21,31,0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --ink: #eef1ea;
+      --paper: #10151f;
+      --card: #171d28;
+      --text: #eef1ea;
+      --text-muted: #98a3ad;
+      --rail-soft: rgba(255,90,110,0.16);
+      --rail: #ff5a6e;
+      --bus: #e0ab3f;
+      --bus-soft: rgba(224,171,63,0.18);
+      --line: rgba(238,241,234,0.14);
+      --tag-culture: #b39ddb;
+      --tag-culture-soft: rgba(179,157,219,0.16);
+      --tag-nature: #7fbfa6;
+      --tag-nature-soft: rgba(127,191,166,0.16);
+      --tag-city: #7fb0e0;
+      --tag-city-soft: rgba(127,176,224,0.16);
+      --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.4);
+    }
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--paper);
+    color: var(--text);
+    font-family: 'IBM Plex Sans', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+
+  .masthead {
+    padding: 2rem clamp(1rem, 4vw, 3rem) 1.25rem;
+    border-bottom: 1px solid var(--line);
+  }
+  .masthead__eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--rail);
+    margin: 0 0 0.4rem;
+  }
+  .masthead__title {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 900;
+    font-size: clamp(2.4rem, 6vw, 4.2rem);
+    line-height: 0.92;
+    letter-spacing: -0.01em;
+    margin: 0 0 0.6rem;
+    text-wrap: balance;
+  }
+  .masthead__sub {
+    font-size: 1rem;
+    color: var(--text-muted);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+    border-bottom: 1px solid var(--line);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .stats__item {
+    flex: 1 1 120px;
+    padding: 0.9rem clamp(1rem, 4vw, 3rem);
+    border-right: 1px solid var(--line);
+  }
+  .stats__item:last-child { border-right: none; }
+  .stats__value {
+    font-size: 1.4rem;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+  .stats__label {
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+    align-items: start;
+  }
+  @media (max-width: 880px) {
+    .layout { grid-template-columns: 1fr; }
+  }
+
+  #map {
+    height: min(78vh, 720px);
+    width: 100%;
+    background: var(--card);
+  }
+  @media (max-width: 880px) {
+    #map { height: 62vh; }
+  }
+
+  .legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.1rem;
+    padding: 0.7rem clamp(1rem, 4vw, 1.5rem);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--line);
+    align-items: center;
+  }
+  .legend__swatch { display: inline-flex; align-items: center; gap: 0.4rem; }
+  .legend__line { display: inline-block; width: 22px; height: 0; border-top: 3px solid var(--rail); }
+  .legend__line--flag { border-top: 3px dashed var(--rail); }
+  .legend__line--bus { border-top: 3px dotted var(--bus); }
+
+  .timeline {
+    max-height: min(78vh, 720px);
+    overflow-y: auto;
+    border-left: 1px solid var(--line);
+  }
+  @media (max-width: 880px) {
+    .timeline { max-height: none; border-left: none; border-top: 1px solid var(--line); }
+  }
+
+  .stop {
+    display: flex;
+    gap: 0.9rem;
+    padding: 1.1rem clamp(1rem, 4vw, 1.5rem);
+    border-bottom: 1px solid var(--line);
+    cursor: pointer;
+    background: transparent;
+    transition: background 120ms ease;
+  }
+  .stop:hover, .stop.is-active { background: var(--rail-soft); }
+  .stop--waypoint { opacity: 0.7; }
+  .stop--daytrip { opacity: 0.85; }
+
+  .stop__num {
+    flex: none;
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 50%;
+    background: var(--card);
+    border: 2px solid var(--rail);
+    color: var(--rail);
+    font-family: 'IBM Plex Mono', monospace;
+    font-weight: 500;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.1rem;
+  }
+  .stop--waypoint .stop__num { border-color: var(--text-muted); color: var(--text-muted); width: 1.4rem; height: 1.4rem; font-size: 0.65rem; }
+
+  .stop__body { flex: 1; min-width: 0; }
+  .stop__top { display: flex; align-items: baseline; justify-content: space-between; gap: 0.6rem; flex-wrap: wrap; }
+  .stop__name {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: -0.01em;
+  }
+  .stop__dates {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .stop__note { font-size: 0.88rem; color: var(--text-muted); margin: 0.3rem 0 0.55rem; line-height: 1.45; }
+
+  .tag {
+    display: inline-block;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.15rem 0.5rem;
+    border-radius: 3px;
+  }
+  .tag--culture { background: var(--tag-culture-soft); color: var(--tag-culture); }
+  .tag--nature { background: var(--tag-nature-soft); color: var(--tag-nature); }
+  .tag--city { background: var(--tag-city-soft); color: var(--tag-city); }
+
+  .leg {
+    display: flex;
+    align-items: baseline;
+    gap: 0.5rem;
+    margin-left: 2.8rem;
+    padding: 0.5rem clamp(1rem, 4vw, 1.5rem) 0.5rem 0;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    border-bottom: 1px solid var(--line);
+  }
+  .leg__mode { flex: none; }
+  .leg--flag .leg__mode { color: var(--rail); }
+  .leg--bus .leg__mode { color: var(--bus); }
+  .leg__flagnote { color: var(--rail); }
+  .leg--bus .leg__flagnote { color: var(--bus); }
+
+  footer {
+    padding: 1.2rem clamp(1rem, 4vw, 3rem) 2rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .leaflet-popup-content-wrapper {
+    background: var(--card);
+    color: var(--text);
+    border-radius: 6px;
+  }
+  .leaflet-popup-tip { background: var(--card); }
+  .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.1rem; margin: 0 0 0.2rem; }
+  .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.7rem; color: var(--text-muted); margin: 0 0 0.4rem; }
+  .popup__note { font-size: 0.82rem; margin: 0; }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <p class="masthead__eyebrow">Sep 30 – Oct 28 · 2026</p>
+  <h1 class="masthead__title">The Beijing Loop</h1>
+  <p class="masthead__sub">Thirty days on China's high-speed rail network — imperial capitals, karst rivers, and the tech coast, mostly at 300&nbsp;km/h. One bus, the rest bullet trains.</p>
+</header>
+
+<div class="stats">
+  <div class="stats__item"><div class="stats__value">30</div><div class="stats__label">Days</div></div>
+  <div class="stats__item"><div class="stats__value">9</div><div class="stats__label">Stops</div></div>
+  <div class="stats__item"><div class="stats__value">8</div><div class="stats__label">Rail legs</div></div>
+  <div class="stats__item"><div class="stats__value">1</div><div class="stats__label">Bus leg</div></div>
+  <div class="stats__item"><div class="stats__value">~7,000km</div><div class="stats__label">Rail distance</div></div>
+</div>
+
+<div class="legend">
+  <span class="legend__swatch"><span class="legend__line"></span> Direct HSR</span>
+  <span class="legend__swatch"><span class="legend__line legend__line--flag"></span> HSR, long day / transfer</span>
+  <span class="legend__swatch"><span class="legend__line legend__line--bus"></span> Bus</span>
+</div>
+
+<div class="layout">
+  <div id="map"></div>
+  <div class="timeline" id="timeline"></div>
+</div>
+
+<footer>Made for the trip — map data © OpenStreetMap contributors. Rail times are fastest-published direct/near-direct options; confirm against 12306 / Trip.com before booking.</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script>
+const stops = [
+  { id: 'bj1', num: 1, name: 'Beijing', dates: 'Sep 30 – Oct 7', tag: 'culture', kind: 'stop',
+    note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead.",
+    coord: [39.9042, 116.4074] },
+  { id: 'xa', num: 2, name: "Xi'an", dates: 'Oct 7 – 10', tag: 'culture', kind: 'stop',
+    note: 'The Terracotta Army, then two wheels around the old City Wall.',
+    coord: [34.3416, 108.9398] },
+  { id: 'cq', num: 3, name: 'Chongqing', dates: 'Oct 10 – 13', tag: 'city', kind: 'stop',
+    note: 'Cliffside mountain city, cable cars over the river, and proper Chongqing hotpot.',
+    coord: [29.5630, 106.5516] },
+  { id: 'yy', num: 4, name: 'Guilin / Yangshuo', dates: 'Oct 13 – 16', tag: 'nature', kind: 'stop',
+    note: 'Li River karst peaks — cycling the countryside between rice paddies.',
+    coord: [24.7770, 110.4996] },
+  { id: 'km', num: 5, name: 'Kunming', dates: 'transit', tag: 'city', kind: 'waypoint',
+    note: 'Rail junction into Yunnan — not a stop, just the way through.',
+    coord: [24.8801, 102.8329] },
+  { id: 'dl', num: 6, name: 'Dali', dates: 'Oct 16 – 19', tag: 'nature', kind: 'stop',
+    note: 'Erhai Lake and the old town — a slower pace after three fast-moving weeks.',
+    coord: [25.6065, 100.2676] },
+  { id: 'sx', num: 7, name: 'Shaxi', dates: 'Oct 19 – 21', tag: 'culture', kind: 'stop',
+    note: "A quiet ancient market town, chosen over Lijiang's crowds. The trip's one non-rail leg: a short bus in from Dali.",
+    coord: [26.3167, 99.9167] },
+  { id: 'sh', num: 8, name: 'Shanghai', dates: 'Oct 21 – 24', tag: 'city', kind: 'stop',
+    note: 'Bund skyline, French Concession streets, and a ride on the Maglev.',
+    coord: [31.2304, 121.4737] },
+  { id: 'sz', num: 9, name: 'Suzhou', dates: 'day trip', tag: 'culture', kind: 'daytrip',
+    note: 'Classical gardens — out and back from Shanghai in a day.',
+    coord: [31.2989, 120.5853] },
+  { id: 'bj2', num: 10, name: 'Beijing', dates: 'Oct 26 – 28', tag: 'culture', kind: 'stop',
+    note: 'Back to family for the final days before flying out.',
+    coord: [39.9042, 116.4074] },
+];
+
+const legs = [
+  { from: 'bj1', to: 'xa', mode: 'rail', flag: false, label: '~4.5h direct HSR' },
+  { from: 'xa', to: 'cq', mode: 'rail', flag: false, label: '~5h direct HSR' },
+  { from: 'cq', to: 'yy', mode: 'rail', flag: true, label: '~5–7h HSR, 1 transfer (via Guiyang/Guangzhou)' },
+  { from: 'yy', to: 'km', mode: 'rail', flag: true, label: '~4.5–8h — pick a fast G-service' },
+  { from: 'km', to: 'dl', mode: 'rail', flag: false, label: '~2–3h direct HSR' },
+  { from: 'dl', to: 'sx', mode: 'bus', flag: false, label: '~2.5–3.5h bus' },
+  { from: 'sx', to: 'sh', mode: 'rail', flag: true, label: 'Bus back to Dali/Kunming, then ~8–10h+ HSR with a transfer — the longest travel day of the trip' },
+  { from: 'sh', to: 'sz', mode: 'rail', flag: false, label: '~25–30 min HSR, round trip same day' },
+  { from: 'sh', to: 'bj2', mode: 'rail', flag: false, label: '~4.5h direct HSR' },
+];
+
+const byId = Object.fromEntries(stops.map(s => [s.id, s]));
+
+const map = L.map('map', { scrollWheelZoom: true }).setView([32, 108], 4.4);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18,
+  attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+}).addTo(map);
+
+function markerIcon(stop) {
+  const cls = stop.kind === 'waypoint' ? 'stop-marker stop-marker--waypoint' : 'stop-marker';
+  const label = stop.kind === 'waypoint' ? '' : stop.num;
+  return L.divIcon({
+    className: '',
+    html: `<div class="${cls}" style="${stop.kind === 'waypoint'
+      ? 'width:14px;height:14px;border-radius:50%;background:var(--card);border:2px solid var(--text-muted);'
+      : 'width:30px;height:30px;border-radius:50%;background:var(--card);border:2.5px solid var(--rail);color:var(--rail);display:flex;align-items:center;justify-content:center;font-family:\'IBM Plex Mono\',monospace;font-weight:500;font-size:12px;box-shadow:0 2px 6px rgba(16,21,31,0.25);'}">${label}</div>`,
+    iconSize: stop.kind === 'waypoint' ? [14, 14] : [30, 30],
+    iconAnchor: stop.kind === 'waypoint' ? [7, 7] : [15, 15],
+    popupAnchor: [0, -14],
+  });
+}
+
+const markers = {};
+stops.forEach(stop => {
+  const icon = markerIcon(stop);
+  const marker = L.marker(stop.coord, { icon }).addTo(map);
+  marker.bindPopup(
+    `<p class="popup__name">${stop.name}</p><p class="popup__dates">${stop.dates}</p><p class="popup__note">${stop.note}</p>`
+  );
+  markers[stop.id] = marker;
+});
+
+const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+legs.forEach(leg => {
+  const from = byId[leg.from], to = byId[leg.to];
+  const style = leg.mode === 'bus'
+    ? { color: cssVar('--bus'), weight: 3, dashArray: '2 8', opacity: 0.9 }
+    : { color: cssVar('--rail'), weight: leg.to === 'sz' ? 2 : 3, dashArray: leg.flag ? '9 6' : null, opacity: 0.9 };
+  const line = L.polyline([from.coord, to.coord], style).addTo(map);
+  line.bindTooltip(leg.label, { sticky: true });
+});
+
+const timeline = document.getElementById('timeline');
+stops.forEach(stop => {
+  const el = document.createElement('div');
+  el.className = 'stop' + (stop.kind === 'waypoint' ? ' stop--waypoint' : '') + (stop.kind === 'daytrip' ? ' stop--daytrip' : '');
+  el.innerHTML = `
+    <div class="stop__num">${stop.kind === 'waypoint' ? '·' : stop.num}</div>
+    <div class="stop__body">
+      <div class="stop__top">
+        <span class="stop__name">${stop.name}</span>
+        <span class="stop__dates">${stop.dates}</span>
+      </div>
+      <p class="stop__note">${stop.note}</p>
+      <span class="tag tag--${stop.tag}">${stop.tag}</span>
+    </div>
+  `;
+  el.addEventListener('click', () => {
+    map.flyTo(stop.coord, 7, { duration: 0.8 });
+    markers[stop.id].openPopup();
+    document.querySelectorAll('.stop').forEach(s => s.classList.remove('is-active'));
+    el.classList.add('is-active');
+  });
+  timeline.appendChild(el);
+
+  const leg = legs.find(l => l.from === stop.id);
+  if (leg) {
+    const legEl = document.createElement('div');
+    legEl.className = 'leg' + (leg.mode === 'bus' ? ' leg--bus' : leg.flag ? ' leg--flag' : '');
+    legEl.innerHTML = `<span class="leg__mode">${leg.mode === 'bus' ? '🚌' : '🚄'}</span><span>${leg.label}</span>`;
+    timeline.appendChild(legEl);
+  }
+});
+</script>
+</body>
+</html>
