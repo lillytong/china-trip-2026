@@ -132,7 +132,7 @@
   .layout {
     flex: 1;
     display: grid;
-    grid-template-columns: minmax(300px, 2fr) 3fr;
+    grid-template-columns: minmax(300px, 45fr) 55fr;
     min-height: 0;
   }
   @media (max-width: 880px) {
@@ -577,8 +577,8 @@ const stops = [
   { id: 'wl', name: 'Wulong Karst', tag: 'nature', kind: 'daytrip', dates: 'Oct 11 (day trip)',
     note: "Three Natural Bridges and Furong Cave, part of the UNESCO South China Karst site. Chosen over Zhangjiajie: less touristy, distinct scenery. Direct HSR from Chongqing East to Wulong South (~38min, opened 2025) plus a shuttle to the bridges — back to Chongqing the same evening.",
     coord: [29.3200, 107.7500] },
-  { id: 'km', name: 'Kunming', tag: 'city', kind: 'stop', dates: 'Oct 13–16 · 18 (transit)',
-    note: "Yunnan's rail hub and base for both the Shilin and Dali day trips — extended from 2 to 3 nights now that Dali is folded in here instead of being its own multi-night stop. Passed through once more as a same-day transfer point en route to Guilin (no overnight, straight through). \"City of Eternal Spring,\" Green Lake Park.",
+  { id: 'km', name: 'Kunming', tag: 'city', kind: 'stop', dates: 'Oct 13–16 · 18–19',
+    note: "Yunnan's rail hub and base for both the Shilin and Dali day trips — extended from 2 to 3 nights now that Dali is folded in here instead of being its own multi-night stop. Also the necessary return point on the way out of the Yuanyang spur — Yuanyang has no rail at all, so the route always comes back through Kunming (the nearest HSR hub) for one overnight before continuing on to Guilin by proper HSR, rather than chaining bus + rail straight through in one very long day. \"City of Eternal Spring,\" Green Lake Park.",
     coord: [24.8801, 102.8329] },
   { id: 'sl', name: 'Shilin', tag: 'nature', kind: 'daytrip', dates: 'Oct 14 (day trip)',
     note: 'Stone Forest — 270-million-year-old karst pillar formations. HSR + local bus from Kunming, back the same evening.',
@@ -592,17 +592,17 @@ const stops = [
   { id: 'yy', name: 'Yuanyang', tag: 'nature', kind: 'stop', dates: 'Oct 17 – 18',
     note: 'Hani rice terraces (Duoyishu, Bada) — UNESCO World Heritage, best at sunset and sunrise. No rail station serves Yuanyang at all; reached by bus.',
     coord: [23.1206, 102.8319] },
-  { id: 'gl', name: 'Guilin', tag: 'city', kind: 'stop', dates: 'Oct 18–20 · 23 (transit)',
+  { id: 'gl', name: 'Guilin', tag: 'city', kind: 'stop', dates: 'Oct 19–21 · 24 (transit)',
     note: 'Rail hub, and now also the base for the Longji day trip — Yangshuo itself remains the real scenic stay.',
     coord: [25.2736, 110.2900] },
-  { id: 'lj', name: 'Longji', tag: 'nature', kind: 'daytrip', dates: 'Oct 19 (day trip)',
+  { id: 'lj', name: 'Longji', tag: 'nature', kind: 'daytrip', dates: 'Oct 20 (day trip)',
     note: "Longji / Dragon's Backbone rice terraces, Ping'an village. A long shuttle-bus day trip from Guilin — no rail line reaches it, and most guides recommend an overnight instead of rushing it in a day.",
     coord: [25.7500, 110.1667] },
-  { id: 'ys', name: 'Yangshuo', tag: 'nature', kind: 'stop', dates: 'Oct 20 – 23',
+  { id: 'ys', name: 'Yangshuo', tag: 'nature', kind: 'stop', dates: 'Oct 21 – 24',
     note: 'Li River karst peaks, cycling the countryside between rice paddies — the scenic heart of the region.',
     coord: [24.7770, 110.4996] },
-  { id: 'sh', name: 'Shanghai', tag: 'city', kind: 'stop', dates: 'Oct 23–27 · 28 (final)',
-    note: 'Bund skyline, French Concession streets, a ride on the Maglev. Extended from 3 to 4 nights — this absorbs the day freed up by folding Dali into a Kunming day trip. Trip ends here — Oct 28, 20:30 flight to Zurich.',
+  { id: 'sh', name: 'Shanghai', tag: 'city', kind: 'stop', dates: 'Oct 24–27 · 28 (final)',
+    note: 'Bund skyline, French Concession streets, a ride on the Maglev. Back to its original 3 nights — the Kunming overnight on the Yuanyang→Guilin return now uses the day that this used to absorb. Trip ends here — Oct 28, 20:30 flight to Zurich.',
     coord: [31.2304, 121.4737] },
   { id: 'sz', name: 'Suzhou', tag: 'culture', kind: 'stop', dates: 'Oct 27 – 28',
     note: 'Classical gardens and canal town — one night, then loops straight back to Shanghai for the flight home, not a dead-end finish.',
@@ -618,14 +618,15 @@ const legs = [
   { from: 'cq', to: 'km', train: 'G2883', route: 'Chongqing West → Kunming South', dep: '10:00', arr: '14:52', duration: '4h52m', cls: 'G' },
   { from: 'km', to: 'sl', route: 'HSR + bus, Kunming South → Shilin West → scenic area', duration: '1h15m', cls: 'D', daytrip: true,
     note: 'Day trip, round-trip same day — HSR to Shilin West (~20min) then local bus (45–60min) to the scenic area.' },
-  { from: 'km', to: 'dl', route: 'D-class HSR, Kunming South → Dali → Kunming South', dep: '~07:30', arr: '~20:00', duration: '4h00m', cls: 'D', daytrip: true,
+  { from: 'km', to: 'dl', route: 'D-class HSR, Kunming South → Dali → Kunming South', dep: '~07:30', arr: '~20:00', duration: '2h00m', cls: 'D', daytrip: true,
     note: "Day trip, round-trip same day — ~2h each way by frequent D-class HSR (easy connection, many daily departures). Reworked from a 2-night stand-alone stop. Approximate times, re-verify exact train numbers on 12306." },
   { from: 'km', to: 'js', train: 'C552', route: 'Kunming South → Jianshui', dep: '08:23', arr: '10:39', duration: '2h16m', cls: 'C',
     note: 'Only 3 HSR trains a day on this spur. The next one after 08:23 is 18:36 — too late — so this stays early.' },
   { from: 'js', to: 'yy', route: 'Bus, Jianshui → Yuanyang (Xinjie)', duration: '3h00m', cls: 'BUS', mode: 'bus',
     note: 'No rail — Yuanyang has no train station at all. Bus/car only; timing is approximate, re-verify locally.' },
-  { from: 'yy', to: 'gl', train: 'C568 + G910', route: 'Bus Yuanyang → Jianshui, then Jianshui → Kunming South → Guilin West', dep: '~05:30', arr: '21:38', duration: '~16h08m total', cls: 'G', flag: true,
-    note: "Kunming overnight and the Dali detour both dropped — one long same-day run straight through to Guilin: early bus to Jianshui (~3h), C568 Jianshui→Kunming South 09:02–11:27, a big Kunming layover, then G910 Kunming South→Guilin West 17:10–21:38. Flagged: needs an early Yuanyang bus departure (~05:30–06:00) to make the 09:02 train — the one leg that doesn't cleanly hold to the no-pre-8am rule, by necessity." },
+  { from: 'yy', to: 'km', route: 'Bus, Yuanyang → Jianshui + C-class HSR, Jianshui → Kunming South', duration: '~6h30m total', cls: 'C', flag: true,
+    note: "Yuanyang has no rail at all, so this always routes back through Jianshui (bus, ~3h) to pick up HSR again, on to Kunming South (C-class, ~2h25m, plus a connection layover) — one overnight in Kunming before continuing to Guilin the next day, rather than chaining straight through in one very long day. Sunrise over the terraces first, then a late-morning departure. Exact mid-day Jianshui→Kunming train number/time still needs 12306 re-verification; only ~3 HSR departures/day run this spur." },
+  { from: 'km', to: 'gl', train: 'G910', route: 'Kunming South → Guilin West', dep: '17:10', arr: '21:38', duration: '4h28m', cls: 'G' },
   { from: 'gl', to: 'lj', route: "Shuttle bus, Guilin → Longji/Ping'an", duration: '3h00m', cls: 'BUS', mode: 'bus', daytrip: true,
     note: 'Day trip, round-trip same day — shuttle bus (~2h45m–3h each way) plus a local shuttle to the terraces (~1h each way). Tight; most guides recommend an overnight instead.' },
   { from: 'gl', to: 'ys', train: 'D1835', route: 'Guilin West → Yangshuo', dep: '14:25', arr: '14:49', duration: '0h24m', cls: 'D' },
@@ -667,22 +668,23 @@ const days = [
     note: 'C552 · Kunming South → Jianshui · 08:23–10:39 · 2h16m' },
   { date: '2026-10-17', stopId: 'yy', label: 'Jianshui → Yuanyang', tag: 'nature', travel: true, mode: 'bus', legIdx: [7],
     note: 'Bus, no rail · ~3h to Xinjie — Hani rice terraces at sunset.' },
-  { date: '2026-10-18', stopId: 'gl', label: 'Yuanyang → Guilin (via Jianshui, Kunming)', tag: 'city', travel: true, mode: 'rail', legIdx: [8],
-    note: 'Kunming overnight and the Dali detour both dropped — early bus to Jianshui (~3h) + C568 Jianshui→Kunming 09:02–11:27 + big Kunming layover + G910 Kunming→Guilin West 17:10–21:38. A very long day, early start.' },
-  { date: '2026-10-19', stopId: 'lj', label: 'Longji (day trip)', tag: 'nature', travel: true, mode: 'bus', legIdx: [9],
+  { date: '2026-10-18', stopId: 'km', label: 'Yuanyang → Kunming (via Jianshui)', tag: 'city', travel: true, mode: 'rail', legIdx: [8],
+    note: 'Sunrise over the terraces, then bus to Jianshui (~3h) + C-class HSR Jianshui→Kunming South (~2h25m). Overnight in Kunming — always come back to the HSR hub before continuing on, rather than one marathon day straight through to Guilin.' },
+  { date: '2026-10-19', stopId: 'gl', label: 'Kunming → Guilin', tag: 'city', travel: true, mode: 'rail', legIdx: [9],
+    note: 'G910 · Kunming South → Guilin West · 17:10–21:38 · 4h28m. A relaxed Kunming morning first.' },
+  { date: '2026-10-20', stopId: 'lj', label: 'Longji (day trip)', tag: 'nature', travel: true, mode: 'bus', legIdx: [10],
     note: 'Shuttle bus, no rail · ~2h45m–3h each way + local shuttle — Dragon\'s Backbone terraces, Ping\'an village.' },
-  { date: '2026-10-20', stopId: 'ys', label: 'Guilin → Yangshuo', tag: 'nature', travel: true, mode: 'rail', legIdx: [10],
+  { date: '2026-10-21', stopId: 'ys', label: 'Guilin → Yangshuo', tag: 'nature', travel: true, mode: 'rail', legIdx: [11],
     note: 'D1835 · Guilin West → Yangshuo · 14:25–14:49 · 24m' },
-  { date: '2026-10-21', stopId: 'ys', label: 'Yangshuo', tag: 'nature', note: 'Li River cycling.' },
-  { date: '2026-10-22', stopId: 'ys', label: 'Yangshuo', tag: 'nature', note: 'Countryside, rice paddies.' },
-  { date: '2026-10-23', stopId: 'sh', label: 'Yangshuo → Shanghai (via Guilin)', tag: 'city', travel: true, mode: 'rail', legIdx: [11, 12],
+  { date: '2026-10-22', stopId: 'ys', label: 'Yangshuo', tag: 'nature', note: 'Li River cycling.' },
+  { date: '2026-10-23', stopId: 'ys', label: 'Yangshuo', tag: 'nature', note: 'Countryside, rice paddies.' },
+  { date: '2026-10-24', stopId: 'sh', label: 'Yangshuo → Shanghai (via Guilin)', tag: 'city', travel: true, mode: 'rail', legIdx: [12, 13],
     note: 'D8262 Yangshuo→Guilin 08:57–09:38 + G264 Guilin→Shanghai Hongqiao 12:05–19:30 (7h25m).' },
-  { date: '2026-10-24', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'The Bund, French Concession.' },
-  { date: '2026-10-25', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'Pudong skyline, Maglev.' },
-  { date: '2026-10-26', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'Extra night — this absorbs the day freed up by folding Dali into a Kunming day trip.' },
-  { date: '2026-10-27', stopId: 'sz', label: 'Shanghai → Suzhou', tag: 'culture', travel: true, mode: 'rail', legIdx: [13],
+  { date: '2026-10-25', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'The Bund, French Concession.' },
+  { date: '2026-10-26', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'Pudong skyline, Maglev.' },
+  { date: '2026-10-27', stopId: 'sz', label: 'Shanghai → Suzhou', tag: 'culture', travel: true, mode: 'rail', legIdx: [14],
     note: 'G-class · ~10:00–10:25 (25m, frequent) — classical gardens, canal town.' },
-  { date: '2026-10-28', stopId: 'sh', label: 'Suzhou → Shanghai, depart 20:30', tag: 'culture', travel: true, mode: 'rail', legIdx: [14],
+  { date: '2026-10-28', stopId: 'sh', label: 'Suzhou → Shanghai, depart 20:30', tag: 'culture', travel: true, mode: 'rail', legIdx: [15],
     note: 'G-class ~09:00–09:25 back to Shanghai, then flight 20:30 → Zurich.' },
 ];
 
@@ -746,10 +748,23 @@ function renderMap() {
   legs.forEach(leg => {
     const from = byId[leg.from], to = byId[leg.to];
     if (!from || !to) return;
-    const line = L.polyline([from.coord, to.coord], {
-      color: pillColor(leg.cls), weight: 3, dashArray: (leg.flag || leg.mode === 'bus' || leg.daytrip) ? '9 6' : null, opacity: 0.9,
-    }).addTo(layerGroup);
-    line.bindTooltip(leg.duration, { permanent: true, direction: 'center', className: 'leg-label' });
+    const style = { color: pillColor(leg.cls), weight: 3, dashArray: (leg.flag || leg.mode === 'bus' || leg.daytrip) ? '9 6' : null, opacity: 0.9 };
+    if (leg.daytrip) {
+      // Day trips are round trips: draw two parallel offset lines (there and back)
+      // instead of one, with the one-way duration labeled at the center.
+      const [fLat, fLon] = from.coord, [tLat, tLon] = to.coord;
+      const dLat = tLat - fLat, dLon = tLon - fLon;
+      const len = Math.hypot(dLat, dLon) || 1;
+      const offsetMag = Math.min(len * 0.08, 0.12);
+      const oLat = (-dLon / len) * offsetMag / 2, oLon = (dLat / len) * offsetMag / 2;
+      L.polyline([[fLat + oLat, fLon + oLon], [tLat + oLat, tLon + oLon]], style).addTo(layerGroup);
+      L.polyline([[fLat - oLat, fLon - oLon], [tLat - oLat, tLon - oLon]], style).addTo(layerGroup);
+      L.polyline([from.coord, to.coord], { opacity: 0 }).addTo(layerGroup)
+        .bindTooltip(leg.duration, { permanent: true, direction: 'center', className: 'leg-label' });
+    } else {
+      L.polyline([from.coord, to.coord], style).addTo(layerGroup)
+        .bindTooltip(leg.duration, { permanent: true, direction: 'center', className: 'leg-label' });
+    }
   });
   const bounds = L.latLngBounds(stops.map(s => s.coord));
   map.fitBounds(bounds, { padding: [60, 60] });
