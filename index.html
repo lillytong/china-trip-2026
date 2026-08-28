@@ -132,7 +132,7 @@
   .layout {
     flex: 1;
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(460px, 1.3fr);
+    grid-template-columns: minmax(50%, 1.15fr) minmax(300px, 0.85fr);
     min-height: 0;
   }
   @media (max-width: 880px) {
@@ -207,14 +207,15 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     grid-auto-rows: minmax(92px, 1fr);
+    gap: 1px;
+    background: var(--line);
   }
   .day {
     display: flex;
     flex-direction: column;
     gap: 0.2rem;
     padding: 0.4rem 0.5rem;
-    border-right: 1px solid var(--line);
-    border-bottom: 1px solid var(--line);
+    border: none;
     background: var(--card);
     cursor: pointer;
     transition: background 120ms ease;
@@ -224,11 +225,6 @@
   .day:hover, .day.is-active { background: var(--rail-soft); }
   .day--pad { cursor: default; opacity: 0.32; }
   .day--pad:hover { background: var(--card); }
-  .day[data-tag="culture"] { border-left: 3px solid var(--tag-culture); }
-  .day[data-tag="nature"]  { border-left: 3px solid var(--tag-nature); }
-  .day[data-tag="city"]    { border-left: 3px solid var(--tag-city); }
-  .day[data-travel="true"] { border-top: 3px solid var(--rail); }
-  .day[data-travel="true"][data-mode="bus"] { border-top: 3px solid var(--bus); }
   .day__head { display: flex; align-items: baseline; gap: 0.3rem; flex: none; }
   .day__num {
     font-family: 'IBM Plex Mono', monospace;
@@ -243,44 +239,47 @@
     letter-spacing: 0.05em;
     text-transform: uppercase;
   }
-  .day__body { flex: 1; min-height: 0; }
+  .day__body { flex: 1; min-height: 0; min-width: 0; display: flex; flex-direction: column; gap: 0.3rem; }
   .day__city {
-    font-family: 'Big Shoulders Display', sans-serif;
-    font-weight: 700;
-    font-size: 0.85rem;
-    line-height: 1.1;
-  }
-  .day__city::before { content: ''; }
-  .day[data-travel="true"] .day__city::before { content: '\2192\00a0'; color: var(--rail); }
-  .day[data-travel="true"][data-mode="bus"] .day__city::before { color: var(--bus); }
-  .day__note {
-    font-size: 0.62rem;
-    color: var(--text-muted);
-    line-height: 1.3;
-    margin: 0.1rem 0 0;
-    display: -webkit-box;
-    -webkit-line-clamp: 3;
-    -webkit-box-orient: vertical;
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 600;
+    font-size: 0.8rem;
+    line-height: 1.2;
     overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .day__trains { display: flex; flex-direction: column; gap: 0.2rem; }
+  .day__train-line {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    color: var(--text-muted);
+    min-width: 0;
+  }
+  .day__train-text {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
   .day__badge { display: none; }
 
   @media (max-width: 880px) {
     .calendar__weekdays { display: none; }
-    .calendar__grid { display: flex; flex-direction: column; grid-auto-rows: unset; }
+    .calendar__grid { display: flex; flex-direction: column; grid-auto-rows: unset; gap: 0; background: none; }
     .day {
       flex-direction: row;
       align-items: center;
       gap: 0.8rem;
-      border-left: none !important;
-      border-top: none !important;
       border-bottom: 1px solid var(--line);
       padding: 0.65rem clamp(1rem, 4vw, 1.5rem);
     }
     .day--pad { display: none; }
-    .day__head { flex-direction: column; align-items: flex-start; width: 2.6rem; gap: 0; }
+    .day__head { flex-direction: column; align-items: flex-start; width: 2.6rem; gap: 0; flex: none; }
     .day__city { font-size: 0.95rem; }
-    .day__note { -webkit-line-clamp: 2; font-size: 0.68rem; }
     .day__badge {
       display: block;
       flex: none;
@@ -310,6 +309,8 @@
   .hsr-pill--d { background: var(--tag-city); }
   .hsr-pill--c { background: var(--tag-nature); }
   .hsr-pill--bus { background: var(--bus); font-size: 0.55rem; }
+  .hsr-pill--sm { flex: none; width: 1.05rem; height: 1.05rem; font-size: 0.52rem; border-radius: 3px; }
+  .hsr-pill--sm.hsr-pill--bus { font-size: 0.42rem; }
 
   .leaflet-popup-content-wrapper {
     background: var(--card);
@@ -653,40 +654,40 @@ const days = [
   { date: '2026-10-05', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Golden Week crowds — flexible day.' },
   { date: '2026-10-06', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Extra day with family — the departure shift to Oct 8 frees up a relaxed day.' },
   { date: '2026-10-07', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Last day with family before heading south.' },
-  { date: '2026-10-08', stopId: 'xa', label: "Beijing → Xi'an", tag: 'culture', travel: true, mode: 'rail',
+  { date: '2026-10-08', stopId: 'xa', label: "Beijing → Xi'an", tag: 'culture', travel: true, mode: 'rail', legIdx: [0],
     note: 'G1307 · Beijing Fengtai → Xi\'an North · 09:29–15:18 · 5h49m. Evening: City Wall, old town, food.' },
-  { date: '2026-10-09', stopId: 'cq', label: 'Xi\'an → Chongqing', tag: 'city', travel: true, mode: 'rail',
+  { date: '2026-10-09', stopId: 'cq', label: 'Xi\'an → Chongqing', tag: 'city', travel: true, mode: 'rail', legIdx: [1],
     note: 'Quick morning near the City Wall, then G3351 · Xi\'an North → Chongqing West · 11:05–16:20 · 5h15m. Just a 1-night stopover this time.' },
   { date: '2026-10-10', stopId: 'cq', label: 'Chongqing', tag: 'city', note: 'Cable cars, Hongya Cave.' },
-  { date: '2026-10-11', stopId: 'wl', label: 'Wulong Karst (day trip)', tag: 'nature', travel: true, mode: 'rail',
+  { date: '2026-10-11', stopId: 'wl', label: 'Wulong Karst (day trip)', tag: 'nature', travel: true, mode: 'rail', legIdx: [2],
     note: 'Three Natural Bridges, Furong Cave — HSR to Wulong South (~38min) + shuttle, back to Chongqing the same evening.' },
   { date: '2026-10-12', stopId: 'cq', label: 'Chongqing', tag: 'city', note: 'Chongqing hotpot, mountain-city views.' },
-  { date: '2026-10-13', stopId: 'km', label: 'Chongqing → Kunming', tag: 'city', travel: true, mode: 'rail',
+  { date: '2026-10-13', stopId: 'km', label: 'Chongqing → Kunming', tag: 'city', travel: true, mode: 'rail', legIdx: [3],
     note: 'G2883 · Chongqing West → Kunming South · 10:00–14:52 · 4h52m' },
-  { date: '2026-10-14', stopId: 'sl', label: 'Shilin (day trip)', tag: 'nature', travel: true, mode: 'rail',
+  { date: '2026-10-14', stopId: 'sl', label: 'Shilin (day trip)', tag: 'nature', travel: true, mode: 'rail', legIdx: [4],
     note: 'Stone Forest karst pillars — HSR + bus from Kunming, back the same evening.' },
-  { date: '2026-10-15', stopId: 'js', label: 'Kunming → Jianshui', tag: 'culture', travel: true, mode: 'rail',
+  { date: '2026-10-15', stopId: 'js', label: 'Kunming → Jianshui', tag: 'culture', travel: true, mode: 'rail', legIdx: [5],
     note: 'C552 · Kunming South → Jianshui · 08:23–10:39 · 2h16m' },
-  { date: '2026-10-16', stopId: 'yy', label: 'Jianshui → Yuanyang', tag: 'nature', travel: true, mode: 'bus',
+  { date: '2026-10-16', stopId: 'yy', label: 'Jianshui → Yuanyang', tag: 'nature', travel: true, mode: 'bus', legIdx: [6],
     note: 'Bus, no rail · ~3h to Xinjie — Hani rice terraces at sunset.' },
-  { date: '2026-10-17', stopId: 'dl', label: 'Yuanyang → Dali (via Jianshui, Kunming)', tag: 'nature', travel: true, mode: 'bus',
+  { date: '2026-10-17', stopId: 'dl', label: 'Yuanyang → Dali (via Jianshui, Kunming)', tag: 'nature', travel: true, mode: 'bus', legIdx: [7],
     note: 'Kunming overnight dropped — early bus to Jianshui (~3h) + C568 Jianshui→Kunming 09:02–11:27 + C9510 Kunming→Dali 12:20–14:38. A long day, early start.' },
   { date: '2026-10-18', stopId: 'dl', label: 'Dali', tag: 'nature', note: 'Erhai Lake, Dali Old Town, Cang Mountains.' },
-  { date: '2026-10-19', stopId: 'gl', label: 'Dali → Guilin (via Kunming)', tag: 'city', travel: true, mode: 'rail',
+  { date: '2026-10-19', stopId: 'gl', label: 'Dali → Guilin (via Kunming)', tag: 'city', travel: true, mode: 'rail', legIdx: [8, 9],
     note: 'D Dali→Kunming (~2h) + G910 Kunming South→Guilin West 17:10–21:38 (4h28m) — long day, big Kunming layover.' },
-  { date: '2026-10-20', stopId: 'lj', label: 'Longji (day trip)', tag: 'nature', travel: true, mode: 'bus',
+  { date: '2026-10-20', stopId: 'lj', label: 'Longji (day trip)', tag: 'nature', travel: true, mode: 'bus', legIdx: [10],
     note: 'Shuttle bus, no rail · ~2h45m–3h each way + local shuttle — Dragon\'s Backbone terraces, Ping\'an village.' },
-  { date: '2026-10-21', stopId: 'ys', label: 'Guilin → Yangshuo', tag: 'nature', travel: true, mode: 'rail',
+  { date: '2026-10-21', stopId: 'ys', label: 'Guilin → Yangshuo', tag: 'nature', travel: true, mode: 'rail', legIdx: [11],
     note: 'D1835 · Guilin West → Yangshuo · 14:25–14:49 · 24m' },
   { date: '2026-10-22', stopId: 'ys', label: 'Yangshuo', tag: 'nature', note: 'Li River cycling.' },
   { date: '2026-10-23', stopId: 'ys', label: 'Yangshuo', tag: 'nature', note: 'Countryside, rice paddies.' },
-  { date: '2026-10-24', stopId: 'sh', label: 'Yangshuo → Shanghai (via Guilin)', tag: 'city', travel: true, mode: 'rail',
+  { date: '2026-10-24', stopId: 'sh', label: 'Yangshuo → Shanghai (via Guilin)', tag: 'city', travel: true, mode: 'rail', legIdx: [12, 13],
     note: 'D8262 Yangshuo→Guilin 08:57–09:38 + G264 Guilin→Shanghai Hongqiao 12:05–19:30 (7h25m).' },
   { date: '2026-10-25', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'The Bund, French Concession.' },
   { date: '2026-10-26', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'Pudong skyline, Maglev.' },
-  { date: '2026-10-27', stopId: 'sz', label: 'Shanghai → Suzhou', tag: 'culture', travel: true, mode: 'rail',
+  { date: '2026-10-27', stopId: 'sz', label: 'Shanghai → Suzhou', tag: 'culture', travel: true, mode: 'rail', legIdx: [14],
     note: 'G-class · ~10:00–10:25 (25m, frequent) — classical gardens, canal town.' },
-  { date: '2026-10-28', stopId: 'sh', label: 'Suzhou → Shanghai, depart 20:30', tag: 'culture', travel: true, mode: 'rail',
+  { date: '2026-10-28', stopId: 'sh', label: 'Suzhou → Shanghai, depart 20:30', tag: 'culture', travel: true, mode: 'rail', legIdx: [15],
     note: 'G-class ~09:00–09:25 back to Shanghai, then flight 20:30 → Zurich.' },
 ];
 
@@ -770,6 +771,21 @@ function flyToStop(stopId) {
   map.once('moveend', () => markers[stopId].openPopup());
 }
 
+function cleanLabel(label) {
+  return label.replace(/\s*\([^)]*\)\s*$/, '').replace(/,\s*[^,]*$/, '').trim();
+}
+function buildTrainLine(leg) {
+  if (!leg) return '';
+  const key = leg.cls === 'BUS' ? 'bus' : leg.cls.toLowerCase();
+  const badge = leg.cls === 'BUS' ? 'BUS' : leg.cls;
+  let numPart = '';
+  if (leg.train) {
+    numPart = leg.train.replace(new RegExp('^' + leg.cls + '\\s*'), '').trim();
+  }
+  const timePart = (leg.dep && leg.arr) ? `${leg.dep}–${leg.arr}` : leg.duration;
+  const text = numPart ? `${numPart} · ${timePart}` : timePart;
+  return `<span class="day__train-line"><span class="hsr-pill hsr-pill--${key} hsr-pill--sm">${badge}</span><span class="day__train-text">${text}</span></span>`;
+}
 function pad(n) { return String(n).padStart(2, '0'); }
 function toISODate(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
 const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
@@ -813,6 +829,7 @@ function renderCalendar() {
     cell.dataset.tag = entry.tag;
     cell.dataset.travel = entry.travel ? 'true' : 'false';
     if (entry.mode) cell.dataset.mode = entry.mode;
+    const trainLines = (entry.legIdx || []).map(i => buildTrainLine(legs[i])).join('');
     cell.innerHTML = `
       <div class="day__head">
         <span class="day__num">${d.getDate()}</span>
@@ -820,8 +837,8 @@ function renderCalendar() {
       </div>
       <span class="day__badge"></span>
       <div class="day__body">
-        <div class="day__city">${entry.label}</div>
-        <p class="day__note">${entry.note}</p>
+        <div class="day__city">${cleanLabel(entry.label)}</div>
+        ${trainLines ? `<div class="day__trains">${trainLines}</div>` : ''}
       </div>
     `;
     cell.addEventListener('click', () => {
