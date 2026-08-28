@@ -6,98 +6,61 @@
 
 ## Key Dates & Constraints
 - **Arrival:** Sept 30, 10:30am — Beijing Daxing Airport (connecting flight; risk of missed connection).
-- **Lilly's departure from China:** Oct 28, 20:30, Beijing Daxing → Zurich. (Confirmed — earlier "Sept 28" was a typo.)
+- **Lilly's departure from China:** Oct 28, 20:30, **Shanghai → Zurich**. (Booked from Shanghai, not Beijing — the trip now ends in Shanghai, no loop back to Beijing at the end.)
 - **Emmanuel:** EU/French citizen — 30 days visa-free in China, no visa process needed. Window: Sept 30 → ~Oct 30.
 - **After the joint trip:** Emmanuel continues on to Japan for ~1 month.
 - **Lilly:** returns to Zurich, starts work **Nov 4**.
-- Total time in China: 28 days (Sept 30–Oct 28). Beijing leg uses 8 of those; ~21 days left for the southbound rail loop.
+- Total time in China: 28 nights (Sept 30–Oct 28). Beijing leg uses 7 of those nights (fixed); 21 nights left for the southbound rail loop.
 - **Oct 1–7 = Golden Week** (China's peak domestic travel holiday) — overlaps the entire Beijing stay. Expect major crowds/inflated prices; book timed-entry tickets (Forbidden City, Great Wall) well in advance.
 
 ## Route Preference
-Train-only (no flights) — smooth, mostly-direct high-speed rail (G/D-series) is the top priority; itinerary is built around rail connectivity, not the reverse. Balance of culture, nature, cities, cuisine, and tech (Emmanuel: outdoorsy + culture/history + interested in China's tech scene).
+Rail-only (HSR G/D/C class) strongly preferred — no departures before 8am, no arrivals after 22:30, except explicitly-flagged car/bus transfers where no rail exists. Balance of culture, nature, cities, cuisine, and tech (Emmanuel: outdoorsy + culture/history + interested in China's tech scene).
 
-## Itinerary 1 — via Yunnan (12306-verified)
+## The Itinerary (12306-verified where noted; some legs flagged as approximate/bus)
 
-Beijing → Xi'an → Chongqing → Kunming (transit) → Jianshui → Kunming (overnight) → Guilin (transit) → Yangshuo → Guilin (transit) → Shanghai → Suzhou → Beijing.
+Beijing → Xi'an → Chongqing → Kunming → **Shilin** (day trip) → Jianshui → **Yuanyang** (bus, flagged) → Kunming (backtrack) → **Dali** (backtrack) → Kunming (backtrack) → Guilin → **Longji** (day trip, bus, flagged) → Yangshuo → Guilin (transit) → Shanghai → **Suzhou** (1 night) → Shanghai (final — depart Oct 28, 20:30 to Zurich).
 
-All departures 8:00am or later, all arrivals before 22:30 — no pre-8am starts, no overnight/sleeper legs. The old 10h15m Dali→Guilin through-train is gone — split into a Kunming overnight break, which costs *less* total rail time than the marathon while adding a night in Kunming. Yangshuo is the real stay (karst river town, cycling, Li River) with Guilin reduced to a rail-hub changeover on both sides — Guilin's own station network is genuinely convenient for this (Guilin ↔ Yangshuo is a real ~22min HSR hop).
+Rebuilt from the two-itinerary draft per Lilly's direction: single itinerary only (no numbering, no tabs). Dali is kept despite being a dead-end spur north of Kunming — the least-bad sequencing loops it into the Kunming-area cluster (Kunming → Shilin → Jianshui → Yuanyang → back through Kunming → Dali → back through Kunming → onward to Guilin), so Kunming gets visited three times but every other leg stays a forward-moving HSR trunk line. Shilin and Longji are added as day trips (not relocations) so they don't cost extra nights. To fund Dali's extra nights without cutting anything, Xi'an drops from 3 nights to 2 and Shanghai drops from 4 nights to 3.
 
-**Dali → Jianshui swap:** Dali felt too touristy/"big city" on reflection. Jianshui is a working Confucian temple town — less developed for tourism, purple-clay pottery, steam-pot chicken, and Tuanshan Village (a preserved ancient village) nearby. Structurally nothing changes: Jianshui is a dead-end spur off Kunming exactly like Dali was (no onward HSR toward Guilin/Nanning), so the same out-and-back-through-Kunming shape holds — it's just ~25min faster each way. Puzhehei (karst lake scenery, 1h11m from Kunming) was considered and set aside since it risks feeling too similar to Yangshuo.
+**Two legs are genuinely not rail** and are flagged accordingly: Jianshui↔Yuanyang (no train serves Yuanyang at all — bus/car only, ~3h each way) and Guilin↔Longji (shuttle bus, ~2h45m–3h each way, no rail line). Everything else is HSR/intercity rail (G/D/C class).
 
-| Stop | Dates | Focus | Train to next | Duration | Class |
+| Stop | Dates | Focus | Train/bus to next | Duration | Class |
 |---|---|---|---|---|---|
 | Beijing (family) | Sept 30 – Oct 7 | Forbidden City, Summer Palace, Great Wall (Mutianyu). Overlaps Golden Week Oct 1–7 — book tickets early. | G365, Beijing West → Xi'an North, 09:55→14:05 | 4h10m | **G — HSR** |
-| Xi'an | Oct 7–10 | Terracotta Army, City Wall bike ride | G3351, Xi'an North → Chongqing West, 11:05→16:20 | 5h15m | **G — HSR** |
-| Chongqing | Oct 10–13 | Mountain-city scenery, hotpot | G2883, Chongqing West → Kunming South, 10:00→14:52 | 4h52m | **G — HSR** |
-| Kunming | transit only (1 night) | Rail junction into Yunnan | C552, Kunming South → Jianshui, 08:23→10:39 | 2h16m | **C — HSR** (intercity — only 3 HSR trains/day on this spur; next after 08:23 is 18:36, too late to be worth it, so this stays early) |
-| Jianshui | Oct 14–15 | Working Confucian temple town, purple-clay pottery, steam-pot chicken; Tuanshan Village nearby | C578, Jianshui → Kunming South, 10:20→12:24 | 2h04m | **C — HSR** (dead-end spur off Kunming — no onward HSR toward Guilin/Nanning) |
-| Kunming | Oct 15–16 | Overnight break instead of the old marathon — "City of Eternal Spring," Green Lake Park | G910, Kunming South → Guilin West, 09:13→13:41 | 4h28m | **G — HSR** (only 3 trains/day; next after 09:13 is 17:10, misses the 14:25 Yangshuo connection, so this stays early) |
-| Guilin | transit only | Rail hub — Yangshuo is the stay | D1835, Guilin West → Yangshuo, 14:25→14:49 | 0h24m | **D — HSR** |
-| Yangshuo | Oct 16–19 | Li River karst peaks, cycling the countryside — the scenic heart of the region | D8262, Yangshuo → Guilin, 08:57→09:38 | 0h41m | **D — HSR** (next train after 08:57 is 13:32, misses the 12:05 Shanghai connection, so this stays early) |
-| Guilin | transit only | Back through to connect onward | G264, Guilin → Shanghai Hongqiao, 12:05→19:30 | 7h25m | **G — HSR** |
-| Shanghai | Oct 19–23 | City highlights — now a proper 4-night stay | G3318, Shanghai Hongqiao → Suzhou North, 10:20→10:43 | 0h23m | **G — HSR** |
-| Suzhou | Oct 23–25 | Classical gardens, canal town — a calm finish before the last ride home | G670, Suzhou North → Beijing South, 10:08→15:51 | 5h43m | **G — HSR** (direct, no need to backtrack through Shanghai) |
-| Beijing (family) | Oct 25–28 | Final days before Oct 28, 20:30 flight to Zurich | Depart | | |
+| Xi'an | Oct 7–9 | Terracotta Army, City Wall bike ride. **Squeezed from 3→2 nights** to fund Dali. | G3351, Xi'an North → Chongqing West, 11:05→16:20 | 5h15m | **G — HSR** |
+| Chongqing | Oct 9–12 | Mountain-city scenery, Hongya Cave, hotpot | G2883, Chongqing West → Kunming South, 10:00→14:52 | 4h52m | **G — HSR** |
+| Kunming (1st visit) | Oct 12–14 | "City of Eternal Spring," Green Lake Park. Base for the Shilin day trip. | HSR + bus, Kunming South → Shilin West (~20min) → scenic area (bus, 45–60min) | ~1h15m each way | **G/D — HSR + bus** (day trip, round-trip same day) |
+| Shilin (day trip) | Oct 13 | Stone Forest — 270-million-year-old karst pillar formations. Back to Kunming same evening. | (returns to Kunming) | — | — |
+| Kunming → Jianshui | Oct 14 | Depart Kunming for the Jianshui/Yuanyang spur | C552, Kunming South → Jianshui, 08:23→10:39 | 2h16m | **C — HSR** (only 3 HSR trains/day on this spur; next after 08:23 is 18:36, too late, so this stays early) |
+| Jianshui | Oct 14–15 | Working Confucian temple town, purple-clay pottery, steam-pot chicken; Tuanshan Village nearby | Bus, Jianshui → Yuanyang (Xinjie town) | ~3h | **Bus — no rail** (flagged; Yuanyang has no train station at all, direct or indirect — this is unavoidably road transport) |
+| Yuanyang | Oct 15–16 | Hani rice terraces (Duoyishu, Bada) — sunset/sunrise over the terraces, UNESCO World Heritage | Bus, Yuanyang → Jianshui (~3h) + C-class train, Jianshui → Kunming South (~2h15m) | ~5h15m total | **Bus + C — HSR** (flagged bus leg; exact Jianshui→Kunming return train not yet 12306-verified — only a handful of departures/day on this spur, re-check before booking) |
+| Kunming (2nd visit) | Oct 16–17 | One-night reset after the long Yuanyang return day | D-class, Kunming South → Dali, ~09:00→11:00 | ~2h00m | **D — HSR** (approx — frequent service, roughly 20+ pairs/day 07:00–21:00, but exact train not yet 12306-verified) |
+| Dali | Oct 17–19 | Erhai Lake, Dali Old Town, Cang Mountains — the stop Lilly wanted kept despite the backtrack | D-class, Dali → Kunming South, ~08:30→10:30 | ~2h00m | **D — HSR** (approx, re-verify on 12306) |
+| Kunming (3rd visit, transit only) | Oct 19 | Same-day pass-through — no overnight this time, straight on to Guilin | G-class, Kunming South → Guilin West, 17:10→21:38 | 4h28m | **G — HSR** (only 3 trains/day on this route; this is the last one that clears the Dali→Kunming connection while still landing under the 22:30 cutoff — a long day with a big Kunming layover, flagged) |
+| Guilin | Oct 19–21 | Rail hub, and now also the base for the Longji day trip | Shuttle bus, Guilin → Longji/Ping'an (~2h45m–3h) + local shuttle to the terraces (~1h) | ~3h45m–4h each way | **Bus — no rail** (flagged; genuinely tight as a day trip — most guides recommend an overnight near the terraces, but it fits the schedule as a long single day) |
+| Longji (day trip) | Oct 20 | Longji/Dragon's Backbone rice terraces, Ping'an village. Back to Guilin same evening. | (returns to Guilin) | — | — |
+| Guilin → Yangshuo | Oct 21 | Quick hop — Yangshuo is the real stay | D1835, Guilin West → Yangshuo, 14:25→14:49 | 0h24m | **D — HSR** |
+| Yangshuo | Oct 21–24 | Li River karst peaks, cycling the countryside between rice paddies — the scenic heart of the region | D8262, Yangshuo → Guilin, 08:57→09:38 + G264, Guilin → Shanghai Hongqiao, 12:05→19:30 | 0h41m + 7h25m | **D + G — HSR** (D8262 is the last morning train that connects to the 12:05 Shanghai departure; a long combined day, flagged) |
+| Shanghai | Oct 24–27 | Bund, French Concession, Pudong skyline, Maglev. **Squeezed from 4→3 nights** to fund Dali. | G-class, Shanghai Hongqiao → Suzhou, ~10:00→10:25 | ~0h25m | **G — HSR** (one of the densest HSR corridors in China — 250+ daily departures, effectively no scheduling risk) |
+| Suzhou | Oct 27–28 | Classical gardens, canal town — one night, then loops straight back to Shanghai for the flight (not a dead-end finish) | G-class, Suzhou → Shanghai Hongqiao, ~09:00→09:25 | ~0h25m | **G — HSR** |
+| Shanghai (final) | Oct 28 | Depart 20:30, Shanghai → Zurich | Depart | | |
 
-**Total rail time: 37h41m across 11 legs.** Stay lengths: Xi'an/Chongqing 2→3 nights, Shanghai 2→4 nights, Suzhou 1→2 nights — the final Beijing stay was ballooning (8 nights) as earlier trims rolled forward unused, so per Lilly's request it's now capped at 3 nights (Oct 25–28) and the freed days spread across Xi'an, Chongqing, Shanghai, and Suzhou instead. Jianshui/Kunming stay at 1 night each (deliberately brief, per earlier request). Departures re-checked on 12306 for later (post-10am) HSR options where they existed without breaking a same-day downstream connection — 7 of 11 legs moved later; the other 4 (Kunming→Jianshui, Kunming→Guilin, Yangshuo→Guilin) stayed early because later options either don't exist in useful numbers or would miss a fixed connecting train.
+**Total rail time: ~34h across 12 rail/bus legs** (10 rail legs ≈ 30h30m HSR + 2 flagged bus legs ≈ 6h). Stay lengths: Xi'an 2 nights, Chongqing 3, Kunming 2+1+transit, Jianshui 1, Yuanyang 1, Dali 2, Guilin 2, Yangshuo 3, Shanghai 3, Suzhou 1 — 28 nights total, Sept 30 → Oct 28, matching the fixed trip length exactly.
 
-## Itinerary 2 — via Changsha/Zhangjiajie, no Yunnan (12306-verified)
-
-Beijing → Xi'an → Chongqing → Guilin (transit) → Yangshuo → Guilin (transit) → Changsha → Zhangjiajie → Changsha (transit) → Shanghai → Suzhou → Beijing. Same Guilin-as-hub/Yangshuo-as-stay split as Itinerary 1; routed back through Changsha rather than straight on to Shanghai, by preference — splits one long direct leg into two HSR legs instead.
-
-Same all-daytime standard as Itinerary 1: nothing before 8am, nothing after 22:30.
-
-| Stop | Dates | Focus | Train to next | Duration | Class |
-|---|---|---|---|---|---|
-| Beijing (family) | Sept 30 – Oct 7 | Same as Itinerary 1 | G365, Beijing West → Xi'an North, 09:55→14:05 | 4h10m | **G — HSR** |
-| Xi'an | Oct 7–10 | Same as Itinerary 1 | G3351, Xi'an North → Chongqing West, 11:05→16:20 | 5h15m | **G — HSR** |
-| Chongqing | Oct 10–13 | Same as Itinerary 1 | G3723, Chongqing West → Guilin West, 10:06→13:49 | 3h43m | **G — HSR** |
-| Guilin | transit only | Rail hub — Yangshuo is the stay | D1835, Guilin West → Yangshuo, 14:25→14:49 | 0h24m | **D — HSR** |
-| Yangshuo | Oct 13–16 | Li River karst peaks, cycling the countryside — reached direct from Chongqing, no Yunnan detour | D8262, Yangshuo → Guilin, 08:57→09:38 | 0h41m | **D — HSR** (next train after 08:57 is 13:32, misses the 10:15 Changsha connection, so this stays early) |
-| Guilin | transit only | Back through to connect onward | G2066, Guilin → Changsha South, 10:15→13:12 | 2h57m | **G — HSR** |
-| Changsha | Oct 16–17 | Hunan's capital — Yuelu Mountain, Hunan food, gateway to Zhangjiajie | G2432, Changsha → Zhangjiajie West, 10:00→11:53 | 1h53m | **G — HSR** (departs Changsha's main station — ~25min transfer by metro/taxi from Changsha South, where the Guilin train arrives) |
-| Zhangjiajie | Oct 17–20 | Sandstone pillar mountains, glass bridge, serious hiking — distinct terrain from Guilin | C7785, Zhangjiajie West → Changsha (main station), 08:00→09:52 | 1h52m | **C — HSR** (intercity — the only later option that day, 10:00→11:52, would miss the fixed 11:05 Shanghai connection, so this stays early) |
-| Changsha (transit) | same day | 73min connection, including the ~25min transfer between Changsha's two stations (main → South) — workable, not rushed | G204, Changsha South → Shanghai Hongqiao, 11:05→15:09 | 4h04m | **G — HSR** |
-| Shanghai | Oct 20–24 | Same as Itinerary 1 — now a proper 4-night stay | G3318, Shanghai Hongqiao → Suzhou North, 10:20→10:43 | 0h23m | **G — HSR** |
-| Suzhou | Oct 24–26 | Same as Itinerary 1 — classical gardens, canal town | G670, Suzhou North → Beijing South, 10:08→15:51 | 5h43m | **G — HSR** (direct, no need to backtrack through Shanghai) |
-| Beijing (family) | Oct 26–28 | Same as Itinerary 1 | Depart | | |
-
-**Total rail time: 31h05m across 11 legs.** Same stay-length rebalancing as Itinerary 1 (Xi'an/Chongqing 2→3 nights, Shanghai 2→4, Suzhou 1→2); Zhangjiajie/Changsha unchanged (3 and 1 nights). Final Beijing stay drops from 7 nights to 2 (Oct 26–28), comfortably under the 3-night cap — this itinerary had one more "extra" day than Itinerary 1 needed to redistribute, so it landed at 2 rather than exactly 3.
-
-**Note on Changsha's two stations:** the Guilin/Shanghai trains use Changsha South (长沙南), but the Zhangjiajie line only serves Changsha's main station (长沙) — both legs through Changsha require a short in-city transfer (~25min by metro/taxi) between the two. Not a booking problem, just worth knowing before arrival.
-
-**Both itineraries:** every leg checked directly against 12306.cn (China's official rail booking site) — real train numbers, real durations, all G (高铁)/D (动车)/C (城际) class, i.e. **100% HSR, zero conventional-rail legs**. Times are from a live query (tickets actually go on sale ~15 days before travel — treat as representative schedule, re-confirm exact train closer to booking).
-
-**Public dashboard (genericized — no exact flight times, "family in Beijing" not the Daxing address; switchable between both itineraries, with exact train numbers, durations, and HSR class per leg):** https://lillytong.github.io/china-trip-2026/
-Repo: https://github.com/lillytong/china-trip-2026 (public, required for free GitHub Pages)
-Source: `site/index.html` in this folder — Leaflet + OpenStreetMap, edit directly and `git push` to update the live site.
-
-## Earlier Drafts (superseded by Itineraries 1 & 2 above, kept for reference)
-
-### DeepSeek draft — Beijing → Xi'an → Chongqing → Guilin/Yangshuo → Yunnan → Shanghai
-Reordered into Itinerary 1 because this sequence bridges Yunnan between two unrelated stops, forcing two costly transitions instead of one — Chongqing→Guilin and Shaxi→Shanghai were flagged as transfer-heavy based on third-party estimates that the 12306 checks above disproved for the Chongqing/Kunming↔Guilin legs specifically.
-
-### Zhangjiajie/Shenzhen route (kept for comparison, avoids Yunnan entirely)
-
-| Stop | Nights | Focus | Train to next |
-|---|---|---|---|
-| Beijing | 5–6 | Imperial culture/history, hutongs, family. Overlaps Golden Week (Oct 1–7) — book Forbidden City/Wall tickets early; Mutianyu over Badaling for the Wall. | → Xi'an, ~4.5h direct |
-| Xi'an | 3 | Terracotta Army, ancient capital, city wall bike ride | → Chengdu, ~3.5h direct |
-| Chengdu | 3 | Pandas, teahouse culture, food | → Chongqing, ~1.5h direct |
-| Chongqing | 1–2 | Cyberpunk mountain city, hotpot, Hongya Cave — cheap add | → Guilin, ~4–5h (optional overnight break in Guiyang/Guizhou — waterfalls, minority villages; easiest thing to cut) |
-| Guilin/Yangshuo | 3 | Karst river landscape, cycling, hiking, rock climbing | → Zhangjiajie via Changsha hub, ~5h, one change |
-| Zhangjiajie | 2–3 | Sandstone pillar mountains, serious hiking/glass bridge — distinct terrain from Guilin | → Shenzhen/Guangzhou via Changsha, ~5–6h |
-| Shenzhen (+ Guangzhou) | 3 | "State of technology" stop — Huaqiangbei electronics market, modern skyline; Guangzhou for Cantonese food/old culture | → Shanghai or Hangzhou, ~7–8h direct (longest single leg, but a direct train, not a broken transfer) |
-| Hangzhou | 2 | West Lake, tea culture, Alibaba/tech thread | → Shanghai, ~30min |
-| Suzhou | day trip | Classical gardens, canal town — day trip from Shanghai/Hangzhou, not a relocation | — |
-| Shanghai | 3–4 | Bund, Pudong, French Concession, ride the Maglev — capstone modern-China stop | → Beijing, ~4.5h direct |
-| Beijing | buffer day | Cushion before Oct 28 flight | Depart |
+**On the "no pre-8am, no post-22:30" rule:** every rail leg above holds to it. Two combined travel days run long by necessity (Dali→Kunming→Guilin on Oct 19, and Yangshuo→Guilin→Shanghai on Oct 24) — both still depart at/after 8am and land before 22:30, but they're full travel days with little else planned, flagged in the table above.
 
 ## Open Questions
-- [ ] **Itinerary 1 (Yunnan/Jianshui) vs. Itinerary 2 (Changsha/Zhangjiajie)** — which matters more, Jianshui's ancient-town culture or Zhangjiajie's hiking?
-- [ ] **Split Guilin→Shanghai with an overnight?** Nanchang is the natural stop — the current direct train already passes through it almost exactly at the midpoint (G264 stops there 4h25m in). Verified: Guilin→Nanchang West (G2340, 5h07m) + Nanchang West→Shanghai (G1342, 3h49m). Not yet applied to either itinerary — awaiting confirmation.
-- [ ] Where does Emmanuel split off to Japan — Shanghai, or after returning to Beijing?
+- [ ] **Re-verify on 12306 closer to booking:** the Jianshui↔Yuanyang bus schedule/operator, the Kunming↔Dali exact train numbers, the Jianshui→Kunming return train after the Yuanyang bus (limited daily departures on that spur), and the Guilin↔Longji shuttle bus timetable/pickup point. All of these are honest approximations, not confirmed times — they were the trickiest legs in this route and deserve a second pass before anything is booked.
+- [ ] **Longji day trip is genuinely tight** (~8h round-trip transit alone, on top of time at the terraces) — most local guides recommend an overnight near Ping'an rather than a single day trip. It fits the schedule as drawn, but if it feels too rushed once dates are closer, the easiest cut is Longji itself (skip it, use the day for a more relaxed Guilin/Yangshuo pace) rather than re-opening Dali or Yuanyang.
+- [ ] Where does Emmanuel split off to Japan — Shanghai, or somewhere else along the route?
 - [ ] Flights/trains already booked vs. still to book?
 - [ ] Must-see people/places, non-negotiables?
-- [ ] Which Beijing classics make the cut given limited/crowded days (Forbidden City, Summer Palace, Great Wall — others)?
-- [ ] Re-verify exact train numbers/times on 12306 closer to actual booking window (ticket sales open ~15 days ahead) — times above are from a live query and representative, not a locked booking.
+- [ ] Which Beijing classics make the cut given limited/crowded Golden Week days (Forbidden City, Summer Palace, Great Wall — others)?
+
+**Public dashboard:** https://lillytong.github.io/china-trip-2026/
+Repo: https://github.com/lillytong/china-trip-2026 (public, required for free GitHub Pages)
+Source: `index.html` in this repo — Leaflet + OpenStreetMap, edit directly and `git push` to update the live site.
+
+## Earlier Drafts (superseded by the itinerary above, kept for reference)
+
+Two prior itineraries were built and compared — **Itinerary 1** (via Yunnan/Jianshui) and **Itinerary 2** (via Changsha/Zhangjiajie, skipping Yunnan entirely). Itinerary 1 was chosen as the base for this rebuild once Dali, Yuanyang, Shilin, and Longji were added per Emmanuel's own draft calendar; Itinerary 2's Changsha/Zhangjiajie routing was dropped rather than merged in, since the two don't fit in the same 28-day budget once Dali is kept. The full text of both earlier drafts (and the DeepSeek/Zhangjiajie-Shenzhen drafts before them) lived in this section in earlier revisions of this file — see git history if they're needed again.
