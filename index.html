@@ -564,8 +564,8 @@ window.carouselNav = function(id, delta) {
 // than once (Kunming is the Yunnan rail hub, Guilin is the karst-region hub) —
 // they get a single marker/popup with a combined "dates" summary.
 const stops = [
-  { id: 'bj', name: 'Beijing', tag: 'culture', kind: 'stop', dates: 'Sep 30 – Oct 8',
-    note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead. Departure shifted from Oct 7 to Oct 8 to match Emmanuel's own draft calendar.",
+  { id: 'bj', name: 'Beijing', tag: 'culture', kind: 'stop', dates: 'Sep 30 – Oct 8 · 26–28 (final)',
+    note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead. Departure shifted from Oct 7 to Oct 8 to match Emmanuel's own draft calendar. The trip now loops back here at the end (Oct 26–28) for final family time before departure, rather than finishing in Shanghai.",
     coord: [39.9042, 116.4074] },
   { id: 'xa', name: "Xi'an", tag: 'culture', kind: 'stop', dates: 'Oct 8 – 9',
     note: "A brief overnight stopover — City Wall bike ride, old town, food. Cut from 2 nights to 1; Terracotta Army deprioritized given Golden Week crowds rather than centering the stop on it.",
@@ -600,11 +600,11 @@ const stops = [
   { id: 'ys', name: 'Yangshuo', tag: 'nature', kind: 'stop', dates: 'Oct 21 – 23',
     note: 'Li River karst peaks, cycling the countryside between rice paddies — the scenic heart of the region. Trimmed from 3 to 2 nights to fund the Guilin return stopover before Shanghai, rather than compressing Shanghai a second time.',
     coord: [24.7770, 110.4996] },
-  { id: 'sh', name: 'Shanghai', tag: 'city', kind: 'stop', dates: 'Oct 24–27 · 28 (final)',
-    note: 'Bund skyline, French Concession streets, a ride on the Maglev. Back to its original 3 nights — the Kunming overnight on the Yuanyang→Guilin return now uses the day that this used to absorb. Trip ends here — Oct 28, 20:30 flight to Zurich.',
+  { id: 'sh', name: 'Shanghai', tag: 'city', kind: 'stop', dates: 'Oct 24–26',
+    note: "Bund skyline, French Concession streets, a ride on the Maglev, plus a Suzhou day trip. **Trimmed from 3 to 2 nights** — the trip no longer ends here; it loops back to Beijing by Oct 26 per Lilly's direction, so Suzhou becomes a day trip instead of an overnight loop to free up the night.",
     coord: [31.2304, 121.4737] },
-  { id: 'sz', name: 'Suzhou', tag: 'culture', kind: 'stop', dates: 'Oct 27 – 28',
-    note: 'Classical gardens and canal town — one night, then loops straight back to Shanghai for the flight home, not a dead-end finish.',
+  { id: 'sz', name: 'Suzhou', tag: 'culture', kind: 'daytrip', dates: 'Oct 25 (day trip)',
+    note: 'Classical gardens and canal town — reworked from an overnight loop into a same-day round trip from Shanghai (the HSR hop is only ~25–30min each way, an easy day out). Back to Shanghai same evening.',
     coord: [31.2989, 120.5853] },
 ];
 
@@ -634,10 +634,10 @@ const legs = [
     note: '12306-verified replacement for the old 08:57 D8262 (non-compliant with the after-9am rule) — the earliest compliant departure on this route; nothing runs between 09:00 and 10:25. Full overnight in Guilin follows, so no downstream timing risk.' },
   { from: 'gl', to: 'sh', train: 'G264', route: 'Guilin (main station) → Shanghai Hongqiao', dep: '12:05', arr: '19:30', duration: '7h25m', cls: 'G',
     note: '12306-verified, direct HSR, no interchange. Station correction: G264 departs Guilin (桂林) main station, not Guilin West — a different, non-adjacent station from where G3714 arrives the day before, so budget time to cross the city.' },
-  { from: 'sh', to: 'sz', train: 'G7136', route: 'Shanghai Hongqiao → Suzhou', dep: '10:20', arr: '10:49', duration: '0h29m', cls: 'G',
-    note: '12306-verified. One of the densest HSR corridors in China — 250+ daily departures, effectively no scheduling risk.' },
-  { from: 'sz', to: 'sh', train: 'G7389', route: 'Suzhou → Shanghai Hongqiao', dep: '09:08', arr: '09:43', duration: '0h35m', cls: 'G',
-    note: '12306-verified replacement for the old placeholder 09:00 (exactly at, not after, the 9am floor). Loops back to Shanghai hours ahead of the Oct 28, 20:30 flight to Zurich.' },
+  { from: 'sh', to: 'sz', train: 'G7136', route: 'Shanghai Hongqiao → Suzhou → Shanghai Hongqiao', dep: '10:20', arr: '10:49', duration: '0h29m', cls: 'G', daytrip: true,
+    note: 'Day trip, round-trip same day — reworked from an overnight loop. Outbound G7136 10:20→10:49 (12306-verified); return G7389 was the previous overnight-loop return train (09:08→09:43 the next morning) and needs a same-evening replacement re-checked on 12306. One of the densest HSR corridors in China — 250+ daily departures, effectively no scheduling risk.' },
+  { from: 'sh', to: 'bj', route: 'HSR, Shanghai Hongqiao → Beijing (South or Fengtai preferred)', duration: '~4h30m', cls: 'G', flag: true,
+    note: "PENDING 12306 VERIFICATION: new leg — the trip now loops back to Beijing by Oct 26 instead of ending in Shanghai. Needs a live 12306 check for the shortest direct G-class option, departing Beijing-bound station preferences TBD by Lilly's rules (Beijing arrivals should favor Beijing South or Beijing Fengtai over Beijing West, since her parents live in Daxing)." },
 ];
 
 // Days: the full Sep 30 – Oct 28 calendar, one entry per date.
@@ -681,12 +681,13 @@ const days = [
     note: 'Guilin is always the return point before the next HSR leg — back for an overnight instead of a same-day pass-through to Shanghai. G3714 · Yangshuo → Guilin West · 10:25–10:45 (12306-verified; replaces an earlier 08:57 departure that broke the after-9am rule).' },
   { date: '2026-10-24', stopId: 'sh', label: 'Guilin → Shanghai', tag: 'city', travel: true, mode: 'rail', legIdx: [13],
     note: 'Direct HSR, Guilin (main station, not West) → Shanghai Hongqiao. G264 · 12:05–19:30 · 7h25m — 12306-verified.' },
-  { date: '2026-10-25', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'The Bund, French Concession.' },
-  { date: '2026-10-26', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'Pudong skyline, Maglev.' },
-  { date: '2026-10-27', stopId: 'sz', label: 'Shanghai → Suzhou', tag: 'culture', travel: true, mode: 'rail', legIdx: [14],
-    note: 'G7136 · Shanghai Hongqiao → Suzhou · 10:20–10:49 · 29m (12306-verified) — classical gardens, canal town.' },
-  { date: '2026-10-28', stopId: 'sh', label: 'Suzhou → Shanghai, depart 20:30', tag: 'culture', travel: true, mode: 'rail', legIdx: [15],
-    note: 'G7389 · Suzhou → Shanghai Hongqiao · 09:08–09:43 (12306-verified) then flight 20:30 → Zurich.' },
+  { date: '2026-10-25', stopId: 'sz', label: 'Suzhou (day trip)', tag: 'culture', travel: true, mode: 'rail', legIdx: [14],
+    note: 'Classical gardens, canal town. G7136 · Shanghai Hongqiao → Suzhou · 10:20–10:49 (12306-verified outbound); return train same evening still needs a 12306 check. Reworked from an overnight loop into a day trip to free up the night for the Beijing return.' },
+  { date: '2026-10-26', stopId: 'bj', label: 'Shanghai → Beijing', tag: 'city', travel: true, mode: 'rail', legIdx: [15],
+    note: "Back to Beijing per Lilly's direction — the trip no longer ends in Shanghai. HSR, Shanghai Hongqiao → Beijing (South/Fengtai preferred over West). PENDING 12306 verification for the exact train." },
+  { date: '2026-10-27', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Final full day with family before departure.' },
+  { date: '2026-10-28', stopId: 'bj', label: 'Beijing, depart → Zurich', tag: 'culture',
+    note: 'Departure flight now ex-Beijing, not ex-Shanghai as in the earlier draft — exact flight time TBD, needs (re)booking/confirmation.' },
 ];
 
 function parseDuration(str) {
