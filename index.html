@@ -128,7 +128,6 @@
     .legend__swatch { gap: 0.2rem; }
     .legend__speed { display: none; }
   }
-
   .layout {
     flex: 1;
     display: grid;
@@ -403,12 +402,21 @@
     white-space: nowrap;
   }
   .leaflet-tooltip.leg-label::before { display: none; }
+
+  @media (max-width: 880px) {
+    /* Save vertical space: drop the totals line, pin the legend beside the title instead of stacking below it. */
+    .totalbar { display: none; }
+    .masthead { flex-wrap: nowrap; align-items: flex-start; }
+    .masthead__title-block { flex: 1 1 auto; min-width: 0; }
+    .masthead__meta { flex: none; align-items: flex-end; }
+    .legend { flex-wrap: wrap; justify-content: flex-end; max-width: 48vw; }
+  }
 </style>
 </head>
 <body>
 
 <header class="masthead">
-  <div>
+  <div class="masthead__title-block">
     <p class="masthead__eyebrow">Sep 30 – Oct 28 · 2026</p>
     <h1 class="masthead__title">China Trip 2026</h1>
   </div>
