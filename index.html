@@ -614,8 +614,8 @@ const stops = [
 
 // Legs: map polyline segments, in travel order.
 const legs = [
-  { from: 'bj', to: 'xa', train: 'G353', route: "Beijing West → Xi'an North", dep: '12:55', arr: '17:08', duration: '4h13m', cls: 'G',
-    note: "12306-verified. Resolved per Lilly's direction: Beijing West chosen over Fengtai/South, since no train from those stations clears the 10am floor (G1307, the only Fengtai daytime option, departs 09:29 — 31min early). G353 clears 10am and is also faster (4h13m vs. G1307's 5h49m)." },
+  { from: 'bj', to: 'xa', train: 'G365', route: "Beijing West → Xi'an North", dep: '09:55', arr: '14:05', duration: '4h10m', cls: 'G',
+    note: "12306-verified. Swapped from G353 (12:55, too late) per Lilly's request for something closer to 10am — G365 departs 09:55, just 5min off, and happens to tie for the single fastest train on the entire route (4h10m, matched only by the pre-8am G351). Beijing West chosen over Fengtai/South since Beijing South doesn't serve this route at all, and Fengtai's only daytime option (G1307, 09:29) is both slower and further from 10am." },
   { from: 'xa', to: 'cq', train: 'G3359', route: "Xi'an North → Chongqing West", dep: '09:41', arr: '14:56', duration: '5h15m', cls: 'G',
     note: '12306-verified. Same duration as the prior G3351 (5h15m) but nearly 1.5h earlier, freeing up the Chongqing afternoon. (The single technically-shortest train on this route, G1835 17:09→22:23 at 5h14m, was rejected — 1 minute faster than G3359 but burns the entire day in Xi\'an and arrives right at the 22:30 cutoff; not worth the trade.)' },
   { from: 'cq', to: 'wl', train: 'D3969', route: 'Chongqing East → Wulong South → Fairy Mountain visitor centre', dep: '08:43', arr: '09:28', duration: '0h45m', cls: 'D', daytrip: true,
@@ -658,7 +658,7 @@ const days = [
   { date: '2026-10-06', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Extra day with family — the departure shift to Oct 8 frees up a relaxed day.' },
   { date: '2026-10-07', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Last day with family before heading south.' },
   { date: '2026-10-08', stopId: 'xa', label: "Beijing → Xi'an", tag: 'culture', travel: true, mode: 'rail', legIdx: [0],
-    note: 'G353 · Beijing West → Xi\'an North · 12:55–17:08 · 4h13m (12306-verified). Beijing West chosen over Fengtai/South since no train from those stations clears 10am. Evening: City Wall, old town, food.' },
+    note: 'G365 · Beijing West → Xi\'an North · 09:55–14:05 · 4h10m (12306-verified) — close to 10am and tied for the fastest train on the route. Beijing West chosen over Fengtai/South since no train from those stations clears 10am. Evening: City Wall, old town, food.' },
   { date: '2026-10-09', stopId: 'cq', label: 'Xi\'an → Chongqing', tag: 'city', travel: true, mode: 'rail', legIdx: [1],
     note: 'Quick morning near the City Wall, then G3359 · Xi\'an North → Chongqing West · 09:41–14:56 · 5h15m (12306-verified, same duration as before but frees up the Chongqing afternoon). Just a 1-night stopover this time.' },
   { date: '2026-10-10', stopId: 'cq', label: 'Chongqing', tag: 'city', note: 'Cable cars, Hongya Cave.' },
