@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>China Trip 2026</title>
-<meta name="description" content="A 12306-verified rail (plus two flagged bus legs) loop through China — Beijing, Xi'an, Chongqing, Wulong Karst, Yunnan (Shilin, Jianshui, Yuanyang, Dali), Guilin, Longji, Yangshuo, Shanghai, and Suzhou.">
+<meta name="description" content="A 12306-verified rail (plus two flagged bus legs) loop through China — Beijing, Xi'an, Chongqing, Wulong Karst, Yunnan (Shilin, Jianshui, Dali), Guilin, Longji, Yangshuo, Shanghai, and Suzhou.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;900&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -153,6 +153,31 @@
 
   .leaflet-control-attribution { display: none !important; }
 
+  .map-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    position: absolute;
+    left: 1rem;
+    bottom: 1rem;
+    z-index: 500;
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 0.5rem 1rem 0.5rem 0.8rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rail);
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: background 0.15s ease, color 0.15s ease;
+  }
+  .map-back svg { width: 13px; height: 13px; flex: none; }
+  .map-back:hover { background: var(--rail); color: var(--card); }
+
   .panel {
     display: flex;
     flex-direction: column;
@@ -279,6 +304,124 @@
     .hsr-pill--sm { width: 0.8rem; height: 0.8rem; font-size: 0.38rem; border-radius: 2px; }
   }
 
+  /* Day detail */
+  .day-detail {
+    display: none;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    flex-direction: column;
+  }
+  .panel--detail .calendar { display: none; }
+  .panel--detail .day-detail { display: flex; }
+
+  .detail__header {
+    flex: none;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--card);
+    border-bottom: 1px solid var(--line);
+    padding: 1rem clamp(1rem, 3vw, 1.75rem) 0.9rem;
+  }
+  .detail__back {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--rail-soft);
+    border: 1px solid transparent;
+    border-radius: 6px;
+    padding: 0.4rem 0.8rem 0.4rem 0.6rem;
+    margin: 0 0 0.75rem;
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--rail);
+    cursor: pointer;
+    transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+  }
+  .detail__back svg { width: 13px; height: 13px; flex: none; }
+  .detail__back:hover { background: var(--rail); color: var(--card); }
+  .detail__back:active { transform: translateX(-1px); }
+  @media (max-width: 880px) { .detail__back { display: none; } }
+  .map-back { display: none; }
+  @media (max-width: 880px) {
+    .map-back.is-active { display: inline-flex; }
+  }
+  .detail__date {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rail);
+    margin: 0 0 0.2rem;
+  }
+  .detail__title {
+    font-family: 'Big Shoulders Display', sans-serif;
+    font-weight: 900;
+    font-size: clamp(1.05rem, 1.8vw, 1.4rem);
+    line-height: 1.05;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .detail__body { padding: 0.25rem clamp(1rem, 3vw, 1.75rem) 2rem; }
+  .detail__section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.66rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 1.25rem 0 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .detail__section:first-child .detail__section-label { margin-top: 0.25rem; }
+  .detail__section-label::after { content: ''; flex: 1; height: 1px; background: var(--line); }
+
+  .transport-card, .stay-card, .site-card {
+    background: var(--card);
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    padding: 0.7rem 0.85rem;
+  }
+  .transport-card + .transport-card, .site-card + .site-card { margin-top: 0.5rem; }
+  .transport-card__head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.35rem; }
+  .transport-card__route { font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 0.83rem; line-height: 1.25; }
+  .transport-card__time { font-family: 'IBM Plex Mono', monospace; font-size: 0.76rem; color: var(--text); font-variant-numeric: tabular-nums; margin-left: auto; white-space: nowrap; flex: none; }
+  .transport-card__meta { font-family: 'IBM Plex Mono', monospace; font-size: 0.66rem; color: var(--text-muted); margin: 0; }
+
+  .status-dot { display: inline-block; width: 7px; height: 7px; border-radius: 50%; flex: none; }
+  .status-dot--confirmed { background: var(--tag-nature); }
+  .status-dot--unbooked { background: var(--bus); }
+
+  .stay-card__head { display: flex; align-items: center; gap: 0.45rem; margin-bottom: 0.35rem; }
+  .stay-card__name { font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 0.83rem; }
+  .stay-card__note { font-size: 0.78rem; line-height: 1.45; color: var(--text); margin: 0; }
+
+  .site-card { display: flex; flex-direction: column; gap: 0.3rem; }
+  .site-card__head { display: flex; align-items: baseline; gap: 0.5rem; }
+  .site-card__name { font-family: 'IBM Plex Sans', sans-serif; font-weight: 600; font-size: 0.82rem; }
+  .site-card__flag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--bus);
+    border: 1px solid var(--bus);
+    border-radius: 3px;
+    padding: 0.05rem 0.35rem;
+    flex: none;
+    margin-left: auto;
+    white-space: nowrap;
+  }
+  .site-card__note { font-size: 0.78rem; line-height: 1.45; color: var(--text-muted); margin: 0; }
+
+  .detail__empty { font-size: 0.78rem; color: var(--text-muted); font-style: italic; margin: 0; }
+
   .hsr-pill {
     flex: none;
     display: inline-flex;
@@ -305,13 +448,13 @@
     border-radius: 6px;
   }
   .leaflet-popup-tip { background: var(--card); }
-  .leaflet-popup-content { margin: 0; width: 380px !important; }
-  .popup { display: flex; align-items: stretch; gap: 0; }
-  .popup__info { flex: 0 0 128px; min-width: 0; padding: 0.55rem 0.6rem; display: flex; flex-direction: column; justify-content: flex-start; }
-  .popup__media { flex: 1; min-width: 0; }
-  .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.05rem; line-height: 1.1; margin: 0 0 0.1rem; }
-  .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.65rem; color: var(--text-muted); margin: 0 0 0.25rem; }
-  .popup__note { font-size: 0.76rem; margin: 0; line-height: 1.25; }
+  .leaflet-popup-content { margin: 0; width: 460px !important; }
+  .popup { display: flex; flex-direction: column; align-items: stretch; gap: 0; height: 420px; }
+  .popup__info { flex: 0 0 40%; min-width: 0; padding: 0.5rem 0.7rem; display: flex; flex-direction: column; justify-content: flex-start; gap: 0.1rem; overflow-y: auto; }
+  .popup__media { flex: 1 1 60%; min-width: 0; min-height: 0; }
+  .popup__name { font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 1.3rem; line-height: 1; margin: 0 !important; }
+  .popup__dates { font-family: 'IBM Plex Mono', monospace; font-size: 0.72rem; color: var(--text-muted); margin: 0.1rem 0 !important; }
+  .popup__note { font-size: 0.82rem; margin: 0 !important; line-height: 1.2; }
 
   .carousel {
     position: relative;
@@ -319,7 +462,7 @@
     height: 100%;
     overflow: hidden;
     background: var(--ink);
-    border-radius: 0 6px 6px 0;
+    border-radius: 0 0 6px 6px;
   }
   .carousel__track {
     display: flex;
@@ -370,6 +513,7 @@
 
   @media (max-width: 640px) {
     .leaflet-popup-content { width: 220px !important; }
+    .popup { height: 260px; }
     .popup__info { flex-basis: 78px; padding: 0.4rem 0.4rem; gap: 0; }
     .popup__name { font-size: 0.76rem; line-height: 1.05; margin: 0; }
     .popup__dates { font-size: 0.5rem; margin: 0; }
@@ -439,6 +583,7 @@
 <div class="layout">
   <div class="map-wrap">
     <div id="map"></div>
+    <button class="map-back" id="mapBack" type="button"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>Calendar</button>
   </div>
   <div class="panel">
     <div class="calendar" id="calendar">
@@ -453,6 +598,7 @@
       </div>
       <div class="calendar__grid" id="calendarGrid"></div>
     </div>
+    <div class="day-detail" id="dayDetail"></div>
   </div>
 </div>
 
@@ -492,11 +638,6 @@ const CITY_IMAGES = {
     { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/0/0e/Jianshui_Confucian_Temple_-_P1360987.JPG/330px-Jianshui_Confucian_Temple_-_P1360987.JPG", caption: "Confucian Temple" },
     { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/2/22/Zhu_Family_Garden_%2848671110343%29.jpg/330px-Zhu_Family_Garden_%2848671110343%29.jpg", caption: "Zhu Family Garden" },
     { url: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Jianshui_-_Chaoyang_Gate_-_P1370485.JPG/330px-Jianshui_-_Chaoyang_Gate_-_P1370485.JPG", caption: "Chaoyang Gate" },
-  ],
-  "Yuanyang": [
-    { url: "https://commons.wikimedia.org/wiki/Special:FilePath/Terrace_field_yunnan_china_denoised.jpg?width=330", caption: "Rice terrace reflections" },
-    { url: "https://commons.wikimedia.org/wiki/Special:FilePath/Town_of_yuanyang.jpg?width=330", caption: "Yuanyang County" },
-    { url: "https://commons.wikimedia.org/wiki/Special:FilePath/1_yuanyang_county_rice_terrace_bada_view_2012.jpg?width=330", caption: "Bada terraces" },
   ],
   "Dali": [
     { url: "https://commons.wikimedia.org/wiki/Special:FilePath/Dali_Old_Town_71.JPG?width=330", caption: "Dali Old Town" },
@@ -568,8 +709,8 @@ window.carouselNav = function(id, delta) {
 // than once (Kunming is the Yunnan rail hub, Guilin is the karst-region hub) —
 // they get a single marker/popup with a combined "dates" summary.
 const stops = [
-  { id: 'bj', name: 'Beijing', tag: 'culture', kind: 'stop', dates: 'Sep 30 – Oct 8 · 25–28 (final)',
-    note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead. Departure shifted from Oct 7 to Oct 8 to match Emmanuel's own draft calendar. The trip now loops back here at the end (Oct 25–28, 3 nights) for final family time before departure, rather than finishing in Shanghai — extended by a night, absorbing the day freed up by turning Wulong Karst into a proper overnight instead of a rushed day trip.",
+  { id: 'bj', name: 'Beijing', tag: 'culture', kind: 'stop', dates: 'Sep 30 – Oct 8 · 26–28 (final)',
+    note: "Arrive, settle in with family, ease into the trip. Golden Week (Oct 1–7) overlaps, so it's Forbidden City, Summer Palace, and the Great Wall at Mutianyu (not Badaling) with tickets booked well ahead. Departure shifted from Oct 7 to Oct 8 to match Emmanuel's own draft calendar. The trip loops back here at the end (Oct 26–28, **2 nights**) for final family time before departure, rather than finishing in Shanghai — per Lilly's direction, freed days elsewhere in the loop went to extra time in Shanghai instead of stacking up here.",
     coord: [39.9042, 116.4074] },
   { id: 'xa', name: "Xi'an", tag: 'culture', kind: 'stop', dates: 'Oct 8 – 9',
     note: "A brief overnight stopover — City Wall bike ride, old town, food. Cut from 2 nights to 1; Terracotta Army deprioritized given Golden Week crowds rather than centering the stop on it.",
@@ -580,32 +721,35 @@ const stops = [
   { id: 'wl', name: 'Wulong Karst', tag: 'nature', kind: 'stop', dates: 'Oct 10 – 11',
     note: "Three Natural Bridges and Furong Cave, part of the UNESCO South China Karst site. Chosen over Zhangjiajie: less touristy, distinct scenery. Reworked from a rushed same-day round trip into a proper overnight per Lilly's direction — a same-day trip left barely enough time for one of the two main sights given the transit involved. Best base is Xiannüshan (Fairy Mountain) town itself, not the HSR station (which is ~40min from the scenic area by shuttle) — plenty of hotels there, from budget guesthouses to resort-style (confirmed well-developed tourist infrastructure).",
     coord: [29.3200, 107.7500] },
-  { id: 'km', name: 'Kunming', tag: 'city', kind: 'stop', dates: 'Oct 12–15 · 17–18',
-    note: "Yunnan's rail hub and base for both the Shilin and Dali day trips — extended from 2 to 3 nights now that Dali is folded in here instead of being its own multi-night stop. Also the necessary return point on the way out of the Yuanyang spur — Yuanyang has no rail at all, so the route always comes back through Kunming (the nearest HSR hub) for one overnight before continuing on to Guilin by proper HSR, rather than chaining bus + rail straight through in one very long day. \"City of Eternal Spring,\" Green Lake Park.",
+  { id: 'km', name: 'Kunming', tag: 'city', kind: 'stop', dates: 'Oct 12–13 · 14–16',
+    note: "Yunnan's rail hub and base for the Shilin and Jianshui day trips; also the transfer point onward to Dali (an overnight, not a same-day round trip). \"City of Eternal Spring,\" Green Lake Park.",
     coord: [24.8801, 102.8329] },
   { id: 'sl', name: 'Shilin', tag: 'nature', kind: 'daytrip', dates: 'Oct 13 (day trip)',
-    note: 'Stone Forest — 270-million-year-old karst pillar formations. HSR + local bus from Kunming, back the same evening.',
+    note: 'Stone Forest — 270-million-year-old karst pillar formations. HSR + local bus from Kunming, back to Kunming by mid-afternoon (in time to continue on to Dali the same evening).',
     coord: [24.7766, 103.2853] },
-  { id: 'dl', name: 'Dali', tag: 'nature', kind: 'daytrip', dates: 'Oct 14 (day trip)',
-    note: 'Erhai Lake, Dali Old Town, the Cang Mountains — reworked from a 2-night dead-end stop into a same-day round trip from Kunming; ~2h each way by frequent D-class HSR makes this an easy day out, back to Kunming the same evening.',
+  { id: 'dl', name: 'Dali', tag: 'nature', kind: 'stop', dates: 'Oct 13 – 14',
+    note: "Erhai Lake, Dali Old Town, the Cang Mountains — a one-night stop, reached by a late-afternoon HSR straight from the Shilin day trip instead of a same-day round trip from Kunming. Station is in Xiaguan, ~13–18km from Dali Old Town.",
     coord: [25.6980, 100.1610] },
-  { id: 'js', name: 'Jianshui', tag: 'culture', kind: 'stop', dates: 'Oct 15 – 16',
-    note: "A working Confucian temple town — Qing/Ming-era streets people still live on, purple-clay pottery, steam-pot chicken. Tuanshan Village (a preserved ancient village) is nearby.",
+  { id: 'js', name: 'Jianshui', tag: 'culture', kind: 'daytrip', dates: 'Oct 15 (day trip)',
+    note: "A working Confucian temple town — Qing/Ming-era streets people still live on, purple-clay pottery, steam-pot chicken; Tuanshan Village nearby. Reworked from an overnight stop into a day trip from Kunming — both trains use Kunming South directly, no cross-city transfer needed either way.",
     coord: [23.6167, 102.8167] },
-  { id: 'yy', name: 'Yuanyang', tag: 'nature', kind: 'stop', dates: 'Oct 16 – 17',
-    note: 'Hani rice terraces (Duoyishu, Bada) — UNESCO World Heritage, best at sunset and sunrise. No rail station serves Yuanyang at all; reached by bus.',
-    coord: [23.1206, 102.8319] },
-  { id: 'gl', name: 'Guilin', tag: 'city', kind: 'stop', dates: 'Oct 18–19 · 22–23',
-    note: "Rail hub — Yangshuo itself remains the real scenic stay. Guilin is always the start and end point for this cluster: every spur returns here before the next HSR leg, including the return before Shanghai — an overnight stop, not a same-day pass-through. **Dropped to 1 night** on the first visit since Longji was cut (see Yangshuo). Note: the Shanghai-bound train (G264) departs Guilin's main station, not Guilin West where the Yangshuo train arrives — two different, non-adjacent stations in the city.",
+  { id: 'gl', name: 'Guilin', tag: 'city', kind: 'stop', dates: 'Oct 19–20',
+    note: "Rail hub — Yangshuo itself remains the real scenic stay. Just one overnight stopover now, after Longji before continuing east — Longji has no rail, so the route comes back through Guilin properly there (a real overnight, not a same-day car-plus-HSR pass-through). Both the Kunming→Yangshuo leg and the Yangshuo→Longji leg now pass straight through Guilin same-day, per Lilly's direction, no stopover needed on either side. Note: the onward train to Changsha (G2340) departs Guilin North, not Guilin West where the Yangshuo/Kunming trains use — a different station.",
     coord: [25.2736, 110.2900] },
-  { id: 'ys', name: 'Yangshuo', tag: 'nature', kind: 'stop', dates: 'Oct 19 – 22',
-    note: "Li River karst peaks, cycling the countryside between rice paddies — the scenic heart of the region. **Back to 3 nights** — Longji was cut (too similar to Yuanyang's rice terraces, and already flagged as genuinely rushed for a day trip), and the freed day goes to Yangshuo rather than Guilin, since it's the more worthwhile place to linger.",
+  { id: 'ys', name: 'Yangshuo', tag: 'nature', kind: 'stop', dates: 'Oct 16 – 18',
+    note: "Li River karst peaks, cycling the countryside between rice paddies — the scenic heart of the region. **2 nights**, reached same-day from Kunming via Guilin (no Guilin overnight needed for this leg).",
     coord: [24.7770, 110.4996] },
-  { id: 'sh', name: 'Shanghai', tag: 'city', kind: 'stop', dates: 'Oct 23–25',
-    note: "Bund skyline, French Concession streets, a ride on the Maglev, plus a Suzhou day trip. **Trimmed from 3 to 2 nights** — the trip no longer ends here; it loops back to Beijing per Lilly's direction, so Suzhou becomes a day trip instead of an overnight loop to free up the night.",
+  { id: 'lj', name: 'Longji', tag: 'nature', kind: 'stop', dates: 'Oct 18 – 19',
+    note: "Dragon's Backbone rice terraces, Ping'an and Dazhai villages. Reached straight from Yangshuo the same day (via Guilin, no overnight stop there) per Lilly's direction — no rail serves Longsheng county at all; private car (~2–2.5h, recommended) or public bus + shuttle (~3–4h). One night in a village guesthouse (Ping'an or Dazhai) is the standard way to do it — day-tripping misses sunrise/sunset light on the terraces.",
+    coord: [25.7167, 110.0833] },
+  { id: 'cs', name: 'Changsha', tag: 'city', kind: 'stop', dates: 'Oct 20 – 21',
+    note: "One night here per Lilly's direction — she's never been and wants to see Hunan. Splits the old direct 7h25m Guilin→Shanghai train day into two shorter days, landing at Changsha South by noon with a full afternoon and evening free: Orange Isle (Juzizhou), the Hunan street-food scene, Yuelu Mountain/Academy if time allows. Genuinely on the same through-line as the direct train — no detour.",
+    coord: [28.2282, 112.9388] },
+  { id: 'sh', name: 'Shanghai', tag: 'city', kind: 'stop', dates: 'Oct 21–23 · 24–26',
+    note: "Bund skyline, French Concession streets, a ride on the Maglev. **4 nights across Shanghai proper**, plus a Suzhou overnight and a Changsha overnight en route — a free day after arrival, a Suzhou overnight, then no rush back to Beijing until the 26th, per Lilly's direction.",
     coord: [31.2304, 121.4737] },
-  { id: 'sz', name: 'Suzhou', tag: 'culture', kind: 'daytrip', dates: 'Oct 24 (day trip)',
-    note: 'Classical gardens and canal town — reworked from an overnight loop into a same-day round trip from Shanghai (the HSR hop is only ~25–30min each way, an easy day out). Back to Shanghai same evening.',
+  { id: 'sz', name: 'Suzhou', tag: 'culture', kind: 'stop', dates: 'Oct 23 – 24',
+    note: 'Classical gardens and canal town — one night here, not a same-day round trip, per Lilly\'s direction. The HSR hop from Shanghai is only ~25–30min, so this costs no extra travel time overall, just swaps which city hosts one of the Shanghai-area nights.',
     coord: [31.2989, 120.5853] },
 ];
 
@@ -615,35 +759,43 @@ const legs = [
     note: "12306-verified. Swapped from G353 (12:55, too late) per Lilly's request for something closer to 10am — G365 departs 09:55, just 5min off, and happens to tie for the single fastest train on the entire route (4h10m, matched only by the pre-8am G351). Beijing West chosen over Fengtai/South since Beijing South doesn't serve this route at all, and Fengtai's only daytime option (G1307, 09:29) is both slower and further from 10am." },
   { from: 'xa', to: 'cq', train: 'G3359', route: "Xi'an North → Chongqing West", dep: '09:41', arr: '14:56', duration: '5h15m', cls: 'G',
     note: '12306-verified. Same duration as the prior G3351 (5h15m) but nearly 1.5h earlier, freeing up the Chongqing afternoon. (The single technically-shortest train on this route, G1835 17:09→22:23 at 5h14m, was rejected — 1 minute faster than G3359 but burns the entire day in Xi\'an and arrives right at the 22:30 cutoff; not worth the trade.)' },
-  { from: 'cq', to: 'wl', train: 'D3969', route: 'Chongqing East → Wulong South', dep: '08:43', arr: '09:28', duration: '0h45m', cls: 'D',
-    note: "Triple-checked given how many times this duration was questioned — genuinely correct. Yu-Xia HSR line, opened Jun 27 2025, ~20 direct HSR services/day. The '~3h' figures found online describe the old pre-2025 route to a *different* station, plain 'Wulong' (武隆站), not Wulong South (武隆南站) — don't confuse them." },
-  { from: 'wl', to: 'wl', route: 'Xiannüshan tourist shuttle, Wulong South station → Xiannüshan Visitor Centre', duration: '0h50m', cls: 'BUS', mode: 'bus',
+  { from: 'cq', to: 'wl', train: 'D3969', route: 'Chongqing East → Wulong South', dep: '08:43', arr: '09:28', duration: '0h45m', cls: 'D', mapLabel: '1h35m',
+    note: "Triple-checked given how many times this duration was questioned — genuinely correct. Yu-Xia HSR line, opened Jun 27 2025, ~20 direct HSR services/day. The '~3h' figures found online describe the old pre-2025 route to a *different* station, plain 'Wulong' (武隆站), not Wulong South (武隆南站) — don't confuse them. Map label shows the full 1h35m door-to-door (train + shuttle) as one figure." },
+  { from: 'wl', to: 'wl', route: 'Xiannüshan tourist shuttle, Wulong South station → Xiannüshan Visitor Centre', duration: '0h50m', cls: 'BUS', mode: 'bus', mapSkip: true,
     note: "Second leg of the full voyage — the train only reaches the station, not the scenic area itself. The 仙女山\"星\"旅游专线 (Xiannüshan Star shuttle, a dedicated blue bus, not a numbered public line): ~50min per local information, ~15–16元 pay-on-board, no fixed timetable (runs ~7am–8pm; stages right at the platform exit 10am–4pm, otherwise a ~15min walk to a nearby interchange). At the Visitor Centre, a further ~10min transfer bus to Three Natural Bridges is bundled into the ~155元 scenic ticket — not a separate fare." },
-  { from: 'wl', to: 'wl', route: 'Xiannüshan tourist shuttle, Xiannüshan Visitor Centre → Wulong South station', duration: '0h50m', cls: 'BUS', mode: 'bus',
+  { from: 'wl', to: 'wl', route: 'Xiannüshan tourist shuttle, Xiannüshan Visitor Centre → Wulong South station', duration: '0h50m', cls: 'BUS', mode: 'bus', mapSkip: true,
     note: 'Return shuttle, same line as the outbound — ~50min, no fixed timetable, so build in buffer before the return train.' },
-  { from: 'wl', to: 'cq', train: 'G8504', route: 'Wulong South → Chongqing East', dep: '21:03', arr: '21:40', duration: '0h37m', cls: 'G',
-    note: "12306-verified — one of ~20 direct HSR options/day on this corridor (others include G8512 09:05, G2374 17:34, etc.), so timing is flexible. Since this is now an overnight rather than a same-day round trip, an earlier return works too if a full second morning in Wulong isn't needed; 21:03 preserves a full second day at the destination." },
+  { from: 'wl', to: 'cq', train: 'G2448', route: 'Wulong South → Chongqing East', dep: '10:45', arr: '11:30', duration: '0h45m', cls: 'G', mapLabel: '1h35m',
+    note: "Cross-verified on Ctrip and crecc.com. Chosen over the earlier G8512 (09:05) — that would need the Xiannüshan shuttle leaving the Visitor Centre by ~07:45, before its reliable 10am–4pm platform-staging window (only vague, unverified tourism-portal claims support a 7am start; no confirmed real-world early departures found). G2448 gives a real, comfortable morning instead — leave the Visitor Centre around 9:15–9:30 with no schedule pressure. Nothing runs in the 09:30–10:44 gap. Map label shows the full 1h35m door-to-door (shuttle + train) as one figure." },
   { from: 'cq', to: 'km', train: 'G2883', route: 'Chongqing West → Kunming South', dep: '10:00', arr: '14:52', duration: '4h52m', cls: 'G' },
   { from: 'km', to: 'sl', train: 'D8620', route: 'Kunming South → Shilin West → scenic area', dep: '09:10', arr: '09:34', duration: '0h24m', cls: 'D', daytrip: true,
-    note: 'Day trip, round-trip same day, 12306-verified — reconfirmed as the shortest compliant option. Outbound D8620 09:10→09:34 (24min); return D8635 20:50→21:16 (26min). Then local bus (45–60min) to the scenic area.' },
-  { from: 'km', to: 'dl', train: 'D8673', route: 'Kunming South → Dali → Kunming South', dep: '08:38', arr: '11:09', duration: '2h31m', cls: 'D', daytrip: true,
-    note: "Day trip, round-trip same day, 12306-verified. Outbound D8673 08:38→11:09 (2h31m); return D8736 19:30→21:47 (2h17m). (The literal-shortest compliant train, D3949 15:30→17:54, was passed over — it's mid-afternoon, leaving almost no daylight in Dali; D8673 is only 7min slower and preserves the full day.) Station note: Dali's HSR station is in Xiaguan (下关), the modern city center — a separate ~13–18km transfer from Dali Old Town, worth accounting for in local transport." },
-  { from: 'km', to: 'js', train: 'C552', route: 'Kunming (main station) → Jianshui', dep: '08:23', arr: '10:39', duration: '2h16m', cls: 'C',
-    note: "12306-verified. Resolved per Lilly's direction: chosen over the Kunming-South-specific C559 (18:36) for the early-afternoon arrival in Jianshui, at the cost of a cross-city transfer — this departs Kunming's main station, not Kunming South where the Shilin/Dali day trips and the hotel are based, so budget transfer time that morning. Misses the 8:30am floor by 7min, the closest daytime option on this spur." },
-  { from: 'js', to: 'yy', route: 'Bus, Jianshui → Yuanyang (Xinjie)', duration: '3h00m', cls: 'BUS', mode: 'bus',
-    note: 'No rail — Yuanyang has no train station at all. Bus/car only; timing is approximate, re-verify locally.' },
-  { from: 'yy', to: 'km', train: 'C578', route: 'Bus, Yuanyang → Jianshui + C-class HSR, Jianshui → Kunming South', dep: '10:20', arr: '12:24', duration: '~5h30m total', cls: 'C',
-    note: "Yuanyang has no rail at all, so this always routes back through Jianshui (bus, ~3h) to pick up HSR again. C578, Jianshui → Kunming South, 10:20→12:24 (2h04m) — 12306-verified as the practical pick for a late-morning bus arrival. (C560, 16:11→18:03 at 1h52m, is technically 12min shorter but would mean hours of dead time waiting in Jianshui — not worth it.) Sunrise over the terraces first, then a late-morning bus." },
+    retTrain: 'D8727', retRoute: 'Shilin West → Kunming South', retDep: '15:12', retArr: '15:38',
+    note: "12306-verified outbound. Return swapped from the old D8635 (20:50) to D8727 (15:12→15:38) so there's time to catch the evening Dali train — not yet 12306-verifiable this far out (aggregator data), re-check closer to the date. Local bus (45–60min) to the scenic area after the outbound train." },
+  { from: 'km', to: 'dl', train: 'D8723', route: 'Kunming South → Dali (Xiaguan)', dep: '15:49', arr: '18:31', duration: '2h42m', cls: 'D',
+    note: "Not 12306-verified yet — this far out, 12306's own booking window (15 days) doesn't reach Oct 13, 2026, so this is aggregator data (verified live on Trip.com); re-check on 12306 closer to the date. Swapped earlier per Lilly's direction, to arrive Dali by ~18:30 — only an 11min buffer after the 15:38 Shilin-return arrival, tight but workable since both trains use Kunming South (no cross-city transfer). Safer fallback if that buffer feels too tight: D3811, 16:07→18:43 (29min buffer, arrives 13min past the 18:30 target). Station note: Dali's HSR station is in Xiaguan (下关), a separate ~13–18km transfer from Dali Old Town." },
+  { from: 'dl', to: 'km', train: 'D8744', route: 'Dali (Xiaguan) → Kunming South', dep: '17:01', arr: '19:37', duration: '2h36m', cls: 'D',
+    note: "Not 12306-verified yet (see above — same booking-window limit); aggregator data, cross-checked on Ctrip + Crecc.com. Evening departure per Lilly's direction, so there's a full morning and afternoon in Dali — arrives Kunming South with a ~23min buffer before 8pm for dinner. (D8654, 17:22→19:44, gains 21min more in Dali but only a 16min buffer — flagged as a tighter alternative if preferred.)" },
+  { from: 'km', to: 'js', train: 'C577', route: 'Kunming South → Jianshui', dep: '07:53', arr: '09:47', duration: '1h54m', cls: 'C', daytrip: true,
+    retTrain: 'C560', retRoute: 'Jianshui → Kunming South', retDep: '16:11', retArr: '18:03',
+    note: "Not yet 12306-verified (aggregator data — Ctrip/Trip.com agree on 07:53→09:47 from Kunming South; one source, hao86.com, shows an earlier ~07:35→09:20, unconfirmed elsewhere — re-check exact minutes closer to the date). C577 is the same physical train as C580, just renumbered at Kunming South — board directly there, no cross-city transfer to Kunming main either direction (unlike the old plan). ~6h24m in Jianshui between trains — Confucian Temple, old town, Zhu Family Garden. Reworked from an overnight stop (reached via a same-day Dali→Kunming→Jianshui combo) into a clean day trip from Kunming." },
   { from: 'km', to: 'gl', train: 'G910', route: 'Kunming South → Guilin West', dep: '09:13', arr: '13:41', duration: '4h28m', cls: 'G',
     note: "12306-verified — G910 turns out to be real AND well-timed (an earlier pass mistakenly assumed it ran a different, unusable slot). This is a genuine improvement: mid-morning departure instead of the previous late-afternoon G4108 (17:10→21:49), 11min shorter too. Means an early start from Kunming rather than a relaxed morning — pack the night before." },
-  { from: 'gl', to: 'ys', train: 'G4811', route: 'Guilin West → Yangshuo', dep: '12:14', arr: '12:34', duration: '0h20m', cls: 'G',
-    note: '12306-verified replacement for the old D1835 (14:25) — G4811 ties for the shortest duration on the whole route (20min) and departs earlier, freeing up more of the Yangshuo afternoon.' },
+  { from: 'gl', to: 'ys', train: 'D1835', route: 'Guilin West → Yangshuo', dep: '14:25', arr: '14:49', duration: '0h24m', cls: 'D',
+    note: "Not 12306-verified yet (aggregator data — Ctrip). Swapped from G4811 (12:14, too early to catch off the Kunming train) now that Kunming→Guilin→Yangshuo runs same-day, no Guilin overnight, per Lilly's direction — G910 arrives Guilin West 13:41, and D1835 is the first practical departure after that (44min buffer). Guilin West→Yangshuo isn't evenly spaced from this station — next options are D1787 (14:33) and D1819 (14:52) if needed." },
   { from: 'ys', to: 'gl', train: 'G3714', route: 'Yangshuo → Guilin West', dep: '10:25', arr: '10:45', duration: '0h20m', cls: 'G',
     note: '12306-reconfirmed — the earliest compliant departure on this route (nothing runs 09:00–10:25) and ties for shortest duration (20min). Full overnight in Guilin follows, so no downstream timing risk.' },
-  { from: 'gl', to: 'sh', train: 'G264', route: 'Guilin (main station) → Shanghai Hongqiao', dep: '12:05', arr: '19:30', duration: '7h25m', cls: 'G',
-    note: '12306-reconfirmed, direct HSR, no interchange — the only direct train that both clears 8:30am and arrives by 22:30 (of 6 direct options total; the only other floor-compliant one, G1506, arrives 22:56, over the cutoff). Station correction stands: G264 departs Guilin (桂林) main station, not Guilin West — a different, non-adjacent station from where G3714 arrives the day before, so budget time to cross the city.' },
-  { from: 'sh', to: 'sz', train: 'G8302', route: 'Shanghai Hongqiao → Suzhou → Shanghai Hongqiao', dep: '08:52', arr: '09:19', duration: '0h27m', cls: 'G', daytrip: true,
-    note: '12306-verified, round-trip same day. Outbound G8302 08:52→09:19 (27min) — the first Hongqiao→Suzhou-main departure after 8:30am, within 2min of the fastest trip possible. Return G7143, Suzhou→Hongqiao, 17:19→17:44 (25min). One of the densest HSR corridors in China — 250+ daily departures, effectively no scheduling risk.' },
+  { from: 'gl', to: 'lj', route: "Private car (or public bus), Guilin → Longji", duration: '~2h15m', cls: 'BUS', mode: 'bus',
+    note: "No rail serves Longsheng county at all — confirmed, and nothing changes this through 2024–2026 (no nearby lines planned). Private car/driver: ~2–2.5h direct to the village parking area, ~¥400–450 one-way — recommended, since it skips the gate transfer below. Public bus: Guilin Qintan Bus Station (琴潭汽车站) → Longji scenic gate, every 20–40min from ~6:25am, ~¥55–60, ~1.5–2.5h, then a park shuttle (~30–60min, partly bundled into the ~¥100 entrance ticket) to the Ping'an/Dazhai parking lot, then a walk up (Ping'an) or cable car (Dazhai) — ~3–4h door-to-door total. No fixed schedule either way, so no departure-time floor applies; a mid-morning start after Guilin checkout works." },
+  { from: 'lj', to: 'gl', route: 'Private car (or public bus), Longji → Guilin', duration: '~2h15m', cls: 'BUS', mode: 'bus',
+    note: "Return leg, same options as the outbound: private car ~2–2.5h direct (recommended), or public bus + shuttle ~3–4h via the scenic gate. Per Lilly's direction, Guilin is always the proper stopping point for this cluster — this gets its own overnight, not a same-day dash straight to the Shanghai train." },
+  { from: 'gl', to: 'cs', train: 'G2066', route: 'Guilin North → Changsha South', dep: '10:15', arr: '13:12', duration: '2h57m', cls: 'G',
+    note: "Not 12306-verified yet (aggregator data — Ctrip/Trip.com/China-Travel-Guide.net, consistent). Swapped later per Lilly's direction — departs after 9:30am, and it's the fastest option on this corridor too (2h57m, faster than the earlier 08:48 pick). Per Lilly's direction, the old single 7h25m Guilin→Shanghai day (G264) splits into two shorter days via a Changsha overnight, instead of burning a whole day on one train. Arrives Changsha South early afternoon — still a comfortable afternoon and evening free. Note: departs Guilin North, not Guilin main station (where the old direct train departed) — a different station." },
+  { from: 'cs', to: 'sh', train: 'G204', route: 'Changsha South → Shanghai Hongqiao', dep: '11:05', arr: '15:09', duration: '4h04m', cls: 'G',
+    note: "Not 12306-verified yet (aggregator data — Ctrip, stop-by-stop verified). ~4h00-4h04m is the real speed floor on this route — only trains making exactly 2 intermediate stops (Nanchang West, Hangzhou East) hit that tier, regardless of time of day; G204 is one of them. Departs after 10am per Lilly's direction, 15min faster than the previous G246 pick (4h19m, more stops) despite arriving 6min later in clock time due to the later departure. Changsha South is a major hub (Beijing-Guangzhou × Shanghai-Kunming HSR interchange) — high reliability." },
+  { from: 'sh', to: 'sz', train: 'G8322', route: 'Shanghai Hongqiao → Suzhou', dep: '11:03', arr: '11:35', duration: '0h32m', cls: 'G',
+    note: "Not 12306-verified yet (aggregator data — Trip.com live search; 12306's booking window doesn't reach Oct 22, 2026 yet). Swapped later per Lilly's direction, so there's no morning rush on either Shanghai↔Suzhou leg — this corridor runs 240+ departures/day each way, essentially zero scheduling risk. Fallback: D5666, 10:25→10:54, if slightly earlier is preferred." },
+  { from: 'sz', to: 'sh', train: 'G7725', route: 'Suzhou → Shanghai Hongqiao', dep: '10:51', arr: '11:18', duration: '0h27m', cls: 'G',
+    note: "Not 12306-verified yet (aggregator data — Trip.com live search; 12306's booking window doesn't reach Oct 23, 2026 yet). Overnight in Suzhou per Lilly's direction, rather than a same-day round trip — relaxed late-morning departure, no rush after checkout. Fallback: G7587, 10:57→11:23." },
   { from: 'sh', to: 'bj', train: 'G12', route: 'Shanghai Hongqiao → Beijing South', dep: '10:00', arr: '14:24', duration: '4h24m', cls: 'G',
     note: "12306-verified — resolves the earlier pending leg cleanly. G12 is the shortest direct train that clears both the 8:30am floor and the 22:30 arrival cap (only one train ties its duration, G32, but arrives 23:49, over the cutoff). Bonus: every single direct Shanghai–Beijing G-train arrives at Beijing South — none go to Beijing West — so there's no station trade-off at all here, unlike the outbound Beijing leg." },
 ];
@@ -651,9 +803,11 @@ const legs = [
 // Days: the full Sep 30 – Oct 28 calendar, one entry per date.
 const days = [
   { date: '2026-09-30', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Arrive Beijing Daxing (10:30am), settle in with family.' },
-  { date: '2026-10-01', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Golden Week begins — Forbidden City.' },
+  { date: '2026-10-01', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Golden Week begins — Forbidden City.',
+    reservations: [{ name: 'Forbidden City', flag: 'Book ahead', note: 'Golden Week — timed-entry ticket, book well in advance.' }] },
   { date: '2026-10-02', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Summer Palace.' },
-  { date: '2026-10-03', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Great Wall at Mutianyu.' },
+  { date: '2026-10-03', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Great Wall at Mutianyu.',
+    reservations: [{ name: 'Great Wall — Mutianyu', flag: 'Book ahead', note: 'Golden Week timed-entry ticket, plus the cable car up — Mutianyu chosen over Badaling for lighter crowds.' }] },
   { date: '2026-10-04', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Hutongs, family time.' },
   { date: '2026-10-05', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Golden Week crowds — flexible day.' },
   { date: '2026-10-06', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Extra day with family — the departure shift to Oct 8 frees up a relaxed day.' },
@@ -665,38 +819,63 @@ const days = [
   { date: '2026-10-10', stopId: 'wl', label: 'Chongqing → Wulong Karst', tag: 'nature', travel: true, mode: 'rail', legIdx: [2, 3],
     note: 'D3969 · Chongqing East → Wulong South · 08:43–09:28 (45min, triple-confirmed), then the Xiannüshan tourist shuttle (~50min, ~15–16元, no fixed timetable) to the Visitor Centre — full door-to-door voyage now shown as two legs, not just the train. A further ~10min transfer to Three Natural Bridges is bundled into the scenic ticket. Overnight here instead of a rushed same-day round trip: afternoon/evening at Three Natural Bridges or Fairy Mountain.' },
   { date: '2026-10-11', stopId: 'cq', label: 'Wulong Karst → Chongqing', tag: 'city', travel: true, mode: 'rail', legIdx: [4, 5],
-    note: 'Morning at whichever sight you didn\'t reach the day before, then the Xiannüshan shuttle back to Wulong South (~50min) + G8504 · Wulong South → Chongqing East · 21:03–21:40 (12306-verified) — a full second day at the destination before heading back. Evening: Chongqing hotpot, mountain-city views.' },
+    note: 'A relatively early morning per Lilly\'s direction — leave the Visitor Centre around 9:15–9:30 for the Xiannüshan shuttle (~50min), then G2448 · Wulong South → Chongqing East · 10:45–11:30 (cross-verified). Kept comfortable on purpose: the earlier G8512 (09:05) would need an unverified ~07:30 shuttle departure, before the shuttle\'s reliable staging window. Limited second-morning sightseeing either way — Three Natural Bridges/Fairy Mountain both need to happen mostly on Day 1 (Oct 10). Rest of the day free in Chongqing: hotpot, mountain-city views.' },
   { date: '2026-10-12', stopId: 'km', label: 'Chongqing → Kunming', tag: 'city', travel: true, mode: 'rail', legIdx: [6],
     note: 'G2883 · Chongqing West → Kunming South · 10:00–14:52 · 4h52m' },
-  { date: '2026-10-13', stopId: 'sl', label: 'Shilin (day trip)', tag: 'nature', travel: true, mode: 'rail', legIdx: [7],
-    note: 'Stone Forest karst pillars. D8620 · Kunming South → Shilin West · 09:10–09:34, return D8635 20:50–21:16 — both 12306-verified.' },
-  { date: '2026-10-14', stopId: 'dl', label: 'Dali (day trip)', tag: 'nature', travel: true, mode: 'rail', legIdx: [8],
-    note: 'Erhai Lake, Dali Old Town, Cang Mountains. D8673 · Kunming South → Dali · 08:38–11:09, return D8736 19:30–21:47 — both 12306-verified. Dali station is in Xiaguan, a separate transfer from Old Town.' },
-  { date: '2026-10-15', stopId: 'js', label: 'Kunming → Jianshui', tag: 'culture', travel: true, mode: 'rail', legIdx: [9],
-    note: "C552 · Kunming (main station) → Jianshui · 08:23–10:39 · 2h16m (12306-verified). Chosen per Lilly's direction for the early-afternoon Jianshui arrival — requires a cross-city transfer to Kunming's main station that morning, since this isn't Kunming South." },
-  { date: '2026-10-16', stopId: 'yy', label: 'Jianshui → Yuanyang', tag: 'nature', travel: true, mode: 'bus', legIdx: [10],
-    note: 'Bus, no rail · ~3h to Xinjie — Hani rice terraces at sunset.' },
-  { date: '2026-10-17', stopId: 'km', label: 'Yuanyang → Kunming (via Jianshui)', tag: 'city', travel: true, mode: 'rail', legIdx: [11],
-    note: 'Sunrise over the terraces, then bus to Jianshui (~3h) + C578 · Jianshui → Kunming South · 10:20–12:24 (12306-verified). Overnight in Kunming — always come back to the HSR hub before continuing on, rather than one marathon day straight through to Guilin.' },
-  { date: '2026-10-18', stopId: 'gl', label: 'Kunming → Guilin', tag: 'city', travel: true, mode: 'rail', legIdx: [12],
-    note: 'G910 · Kunming South → Guilin West · 09:13–13:41 · 4h28m (12306-verified — turns out to be well-timed after all, reversing an earlier draft correction). Early start, pack the night before.' },
-  { date: '2026-10-19', stopId: 'ys', label: 'Guilin → Yangshuo', tag: 'nature', travel: true, mode: 'rail', legIdx: [13],
-    note: 'G4811 · Guilin West → Yangshuo · 12:14–12:34 · 20m (12306-verified, replaces an earlier D1835 pick). Longji is cut — too similar to Yuanyang, and this day goes to Yangshuo instead.' },
-  { date: '2026-10-20', stopId: 'ys', label: 'Yangshuo', tag: 'nature', note: 'Li River cycling.' },
-  { date: '2026-10-21', stopId: 'ys', label: 'Yangshuo', tag: 'nature', note: 'Countryside, rice paddies — the extra night restored from cutting Longji.' },
-  { date: '2026-10-22', stopId: 'gl', label: 'Yangshuo → Guilin', tag: 'city', travel: true, mode: 'rail', legIdx: [14],
-    note: 'Guilin is always the return point before the next HSR leg — back for an overnight instead of a same-day pass-through to Shanghai. G3714 · Yangshuo → Guilin West · 10:25–10:45 (12306-reconfirmed).' },
-  { date: '2026-10-23', stopId: 'sh', label: 'Guilin → Shanghai', tag: 'city', travel: true, mode: 'rail', legIdx: [15],
-    note: 'Direct HSR, Guilin (main station, not West) → Shanghai Hongqiao. G264 · 12:05–19:30 · 7h25m — 12306-reconfirmed as the only train that both clears 8:30am and beats the 22:30 cutoff.' },
-  { date: '2026-10-24', stopId: 'sz', label: 'Suzhou (day trip)', tag: 'culture', travel: true, mode: 'rail', legIdx: [16],
-    note: 'Classical gardens, canal town. G8302 · Shanghai Hongqiao → Suzhou · 08:52–09:19, return G7143 17:19–17:44 — both 12306-verified. Reworked from an overnight loop into a day trip to free up the night for the Beijing return.' },
-  { date: '2026-10-25', stopId: 'bj', label: 'Shanghai → Beijing', tag: 'city', travel: true, mode: 'rail', legIdx: [17],
-    note: "Back to Beijing per Lilly's direction — the trip no longer ends in Shanghai. G12 · Shanghai Hongqiao → Beijing South · 10:00–14:24 · 4h24m (12306-verified — every direct Shanghai-Beijing train lands at Beijing South, so no station trade-off needed)." },
-  { date: '2026-10-26', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Family time — extra night here, absorbing the day freed up by turning Wulong Karst into a proper overnight.' },
+  { date: '2026-10-13', stopId: 'dl', label: 'Shilin (day trip) → Dali', tag: 'nature', travel: true, mode: 'rail', legIdx: [7, 8],
+    note: 'Stone Forest karst pillars, then straight on to Dali for an overnight stay instead of heading back to sleep in Kunming. D8620 · Kunming South → Shilin West · 09:10–09:34, return ~15:12–15:38 (Shilin West → Kunming South), then D8723 · Kunming South → Dali · 15:49–18:31 — only an 11min platform-change buffer, so head straight to the platform on arrival.' },
+  { date: '2026-10-14', stopId: 'km', label: 'Dali → Kunming', tag: 'city', travel: true, mode: 'rail', legIdx: [9],
+    note: 'A full morning and afternoon in Dali first — Erhai Lake, Old Town — then D8744 · Dali (Xiaguan) → Kunming South · 17:01–19:37 · 2h36m, evening arrival in time for dinner. Overnight in Kunming, based here for the Jianshui day trip the next day.' },
+  { date: '2026-10-15', stopId: 'js', label: 'Jianshui (day trip)', tag: 'culture', travel: true, mode: 'rail', legIdx: [10],
+    note: 'C577 · Kunming South → Jianshui · 07:53–09:47, return C560 · Jianshui → Kunming South · 16:11–18:03 — Confucian Temple, old town, Zhu Family Garden, no cross-city transfer either way. Overnight in Kunming again before the early Guilin train.' },
+  { date: '2026-10-16', stopId: 'ys', label: 'Kunming → Yangshuo (via Guilin)', tag: 'nature', travel: true, mode: 'rail', legIdx: [11, 12],
+    note: "G910 · Kunming South → Guilin West · 09:13–13:41 · 4h28m (12306-verified), then D1835 · Guilin West → Yangshuo · 14:25–14:49 (44min buffer) — no Guilin overnight this time, per Lilly's direction. Early start from Kunming, pack the night before." },
+  { date: '2026-10-17', stopId: 'ys', label: 'Yangshuo', tag: 'nature', note: 'Li River cycling, countryside rice paddies.' },
+  { date: '2026-10-18', stopId: 'lj', label: 'Yangshuo → Longji (via Guilin)', tag: 'nature', travel: true, mode: 'rail', legIdx: [13, 14],
+    note: "G3714 · Yangshuo → Guilin West · 10:25–10:45, then straight on by private car to Longji (~2h15m) — no Guilin overnight this time either, per Lilly's direction. Departs well after 9am, so there's no rush, and still reaches Longji by early-to-mid afternoon for a full evening among the terraces.",
+    reservations: [
+      { name: 'Private car, Guilin → Longji', flag: 'Not booked', note: "Off-schedule transport — Lilly to arrange herself, ~¥400–450 one-way." },
+      { name: "Ping'an / Dazhai guesthouse", flag: 'Not booked', note: 'One night — still needs confirming.' },
+    ] },
+  { date: '2026-10-19', stopId: 'gl', label: 'Longji → Guilin', tag: 'city', travel: true, mode: 'bus', legIdx: [15],
+    note: "Sunrise over the terraces, then private car back to Guilin (~2–2.5h). Per Lilly's direction, Guilin gets its own proper overnight here before the Shanghai train." },
+  { date: '2026-10-20', stopId: 'cs', label: 'Guilin → Changsha', tag: 'city', travel: true, mode: 'rail', legIdx: [16],
+    note: "G2066 · Guilin North → Changsha South · 10:15–13:12 · 2h57m — per Lilly's direction, splitting the old 7h25m direct Guilin→Shanghai day into two shorter days via Changsha instead of burning the whole day on one train. Departs after 9:30am and is the fastest option on the route too. Afternoon and evening in Changsha — Orange Isle, Hunan food scene." },
+  { date: '2026-10-21', stopId: 'sh', label: 'Changsha → Shanghai', tag: 'city', travel: true, mode: 'rail', legIdx: [17],
+    note: 'G204 · Changsha South → Shanghai Hongqiao · 11:05–15:09 · 4h04m — near the fastest possible on this route (only 2-stop trains hit ~4h flat), still after 10am. Arrives mid-afternoon with the rest of the day free in Shanghai.' },
+  { date: '2026-10-22', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'Free day — Bund, French Concession, Pudong skyline, Maglev.' },
+  { date: '2026-10-23', stopId: 'sh', label: 'Shanghai', tag: 'city', note: 'Another free day before heading to Suzhou.' },
+  { date: '2026-10-24', stopId: 'sz', label: 'Shanghai → Suzhou', tag: 'culture', travel: true, mode: 'rail', legIdx: [18],
+    note: 'Classical gardens, canal town. Overnight in Suzhou, not a same-day round trip.' },
+  { date: '2026-10-25', stopId: 'sh', label: 'Suzhou → Shanghai', tag: 'city', travel: true, mode: 'rail', legIdx: [19],
+    note: "Back in Shanghai for the rest of the day — no rush needed on this corridor, it runs 250+ departures/day. Straight on to Beijing the next day, per Lilly's direction to keep the 26th fixed." },
+  { date: '2026-10-26', stopId: 'bj', label: 'Shanghai → Beijing', tag: 'city', travel: true, mode: 'rail', legIdx: [20],
+    note: "Back to Beijing per Lilly's direction — G12 · Shanghai Hongqiao → Beijing South · 10:00–14:24 · 4h24m (12306-verified — every direct Shanghai-Beijing train lands at Beijing South, so no station trade-off needed)." },
   { date: '2026-10-27', stopId: 'bj', label: 'Beijing', tag: 'culture', note: 'Final full day with family before departure.' },
   { date: '2026-10-28', stopId: 'bj', label: 'Beijing, depart → Zurich', tag: 'culture',
     note: 'Departure flight now ex-Beijing, not ex-Shanghai as in the earlier draft — exact flight time TBD, needs (re)booking/confirmation.' },
 ];
+
+// Accommodation: one entry per stop, since a given city is usually the same
+// hotel/booking situation across all its nights. None are booked yet — see
+// itinerary.md's Open Questions — so every non-family stay is flagged as such
+// rather than inventing a hotel name.
+const ACCOMMODATION = {
+  bj: { status: 'confirmed', label: 'Staying with family', note: "No hotel needed — Lilly's parents live in Daxing." },
+  xa: { status: 'unbooked', label: 'Hotel — not yet booked', note: 'One night only; look near the City Wall/old town for an easy evening out.' },
+  cq: { status: 'unbooked', label: 'Hotel — not yet booked', note: 'Two separate 1-night stays bracketing Wulong — same hotel both times works fine, or pick two.' },
+  wl: { status: 'unbooked', label: 'Guesthouse — not yet booked', note: 'Base in Xiannüshan (Fairy Mountain) town itself, not the HSR station — budget guesthouses to resort-style are all available and well-developed.' },
+  km: { status: 'unbooked', label: 'Hotel — not yet booked', note: 'Near Kunming South, for easy access to the Shilin and Jianshui day trips and the later 1-night return stopover.' },
+  dl: { status: 'unbooked', label: 'Hotel — not yet booked', note: 'Base in Dali Old Town, not Xiaguan (where the HSR station is) — one night only.' },
+  gl: { status: 'unbooked', label: 'Hotel — not yet booked', note: 'One overnight stopover, after Longji — the onward train to Changsha departs Guilin North, not Guilin West.' },
+  ys: { status: 'unbooked', label: 'Hotel — not yet booked', note: 'Near West Street or along the Li River, for easy cycling access.' },
+  lj: { status: 'unbooked', label: "Guesthouse — not yet booked", note: "Ping'an or Dazhai village guesthouse — book ahead, terrace-view rooms sell out." },
+  cs: { status: 'unbooked', label: 'Hotel — not yet booked', note: 'Near Changsha South or the Orange Isle/Wuyi Square area — one night only.' },
+  sh: { status: 'unbooked', label: 'Hotel — not yet booked', note: 'Bund / French Concession area keeps the Maglev within easy reach.' },
+  sz: { status: 'unbooked', label: 'Hotel — not yet booked', note: 'Near the classical gardens or the old canal district — one night only.' },
+};
+// Day trips return to their base city the same evening — no separate stay.
+const DAYTRIP_BASE = { sl: 'km', js: 'km' };
 
 function parseDuration(str) {
   const h = /(\d+)h/.exec(str), m = /(\d+)m/.exec(str);
@@ -709,6 +888,7 @@ function formatDuration(mins) {
 const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
 const pillColor = cls => cls === 'G' ? cssVar('--rail') : cls === 'D' ? cssVar('--tag-city') : cls === 'C' ? cssVar('--tag-nature') : cssVar('--bus');
 const tagColor = tag => cssVar(`--tag-${tag}`);
+const mapFitPadding = () => window.innerWidth <= 880 ? [20, 20] : [60, 60];
 
 const map = L.map('map', { scrollWheelZoom: true }).setView([30, 108], 4);
 L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
@@ -718,6 +898,7 @@ L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_M
 
 const layerGroup = L.layerGroup().addTo(map);
 const calendarGrid = document.getElementById('calendarGrid');
+const dayDetail = document.getElementById('dayDetail');
 const totalbar = document.getElementById('totalbar');
 const byId = Object.fromEntries(stops.map(s => [s.id, s]));
 const markers = {};
@@ -756,8 +937,10 @@ function renderMap() {
     markers[stop.id] = marker;
   });
   legs.forEach(leg => {
+    if (leg.mapSkip) return;
     const from = byId[leg.from], to = byId[leg.to];
     if (!from || !to) return;
+    const label = leg.mapLabel || leg.duration;
     const style = { color: pillColor(leg.cls), weight: 3, dashArray: (leg.flag || leg.mode === 'bus' || leg.daytrip) ? '9 6' : null, opacity: 0.9 };
     if (leg.daytrip) {
       // Day trips are round trips: draw two parallel offset lines (there and back)
@@ -770,14 +953,14 @@ function renderMap() {
       L.polyline([[fLat + oLat, fLon + oLon], [tLat + oLat, tLon + oLon]], style).addTo(layerGroup);
       L.polyline([[fLat - oLat, fLon - oLon], [tLat - oLat, tLon - oLon]], style).addTo(layerGroup);
       L.polyline([from.coord, to.coord], { opacity: 0 }).addTo(layerGroup)
-        .bindTooltip(leg.duration, { permanent: true, direction: 'center', className: 'leg-label' });
+        .bindTooltip(label, { permanent: true, direction: 'center', className: 'leg-label' });
     } else {
       L.polyline([from.coord, to.coord], style).addTo(layerGroup)
-        .bindTooltip(leg.duration, { permanent: true, direction: 'center', className: 'leg-label' });
+        .bindTooltip(label, { permanent: true, direction: 'center', className: 'leg-label' });
     }
   });
   const bounds = L.latLngBounds(stops.map(s => s.coord));
-  map.fitBounds(bounds, { padding: [60, 60] });
+  map.fitBounds(bounds, { padding: mapFitPadding() });
 
   const totalMins = legs.reduce((sum, l) => sum + parseDuration(l.duration), 0);
   const busMins = legs.filter(l => l.mode === 'bus').reduce((sum, l) => sum + parseDuration(l.duration), 0);
@@ -809,6 +992,127 @@ function buildTrainLine(leg) {
 function pad(n) { return String(n).padStart(2, '0'); }
 function toISODate(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
 const MONTH_ABBR = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+const WEEKDAY_ABBR = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+function accommodationFor(entry) {
+  const baseId = DAYTRIP_BASE[entry.stopId];
+  if (baseId) {
+    const base = byId[baseId];
+    return { status: 'daytrip', label: `Day trip — based in ${base.name}`, note: `No separate stay tonight — back to ${base.name} the same evening.` };
+  }
+  return ACCOMMODATION[entry.stopId];
+}
+
+function renderLegCard(leg) {
+  const key = leg.cls === 'BUS' ? 'bus' : leg.cls.toLowerCase();
+  const badge = leg.cls === 'BUS' ? 'BUS' : leg.cls;
+  const timePart = (leg.dep && leg.arr) ? `${leg.dep} – ${leg.arr}` : '';
+  return `
+    <div class="transport-card">
+      <div class="transport-card__head">
+        <span class="hsr-pill hsr-pill--${key}">${badge}</span>
+        <span class="transport-card__route">${leg.route}</span>
+        ${timePart ? `<span class="transport-card__time">${timePart}</span>` : ''}
+      </div>
+      ${leg.train ? `<p class="transport-card__meta">${leg.train}</p>` : ''}
+    </div>
+  `;
+}
+
+function renderTransportSection(entry) {
+  if (!entry.legIdx || !entry.legIdx.length) {
+    return `<p class="detail__empty">No transport today — based in ${byId[entry.stopId].name}.</p>`;
+  }
+  return entry.legIdx.map(i => {
+    const leg = legs[i];
+    let html = renderLegCard(leg);
+    if (leg.retDep) {
+      html += renderLegCard({ train: leg.retTrain, route: leg.retRoute, dep: leg.retDep, arr: leg.retArr, cls: leg.cls });
+    }
+    return html;
+  }).join('');
+}
+
+function renderStaySection(entry) {
+  const stay = accommodationFor(entry);
+  if (!stay) return '<p class="detail__empty">No accommodation info for this stop yet.</p>';
+  const dotClass = stay.status === 'confirmed' ? 'status-dot--confirmed' : stay.status === 'unbooked' ? 'status-dot--unbooked' : '';
+  return `
+    <div class="stay-card">
+      <div class="stay-card__head">
+        ${dotClass ? `<span class="status-dot ${dotClass}"></span>` : ''}
+        <span class="stay-card__name">${stay.label}</span>
+      </div>
+      <p class="stay-card__note">${stay.note}</p>
+    </div>
+  `;
+}
+
+function renderSitesSection(entry) {
+  const parts = [];
+  if (entry.note) {
+    parts.push(`<div class="site-card"><p class="site-card__note" style="color:var(--text)">${entry.note}</p></div>`);
+  }
+  (entry.reservations || []).forEach(r => {
+    parts.push(`
+      <div class="site-card">
+        <div class="site-card__head">
+          <span class="site-card__name">${r.name}</span>
+          <span class="site-card__flag">${r.flag || 'Book ahead'}</span>
+        </div>
+        <p class="site-card__note">${r.note}</p>
+      </div>
+    `);
+  });
+  if (!parts.length) parts.push('<p class="detail__empty">Nothing specific planned yet.</p>');
+  return parts.join('');
+}
+
+function renderDayDetail(dateIso) {
+  const entry = days.find(d => d.date === dateIso);
+  if (!entry) return;
+  const d = new Date(entry.date + 'T00:00:00');
+  const dateLabel = `${WEEKDAY_ABBR[d.getDay()]} · ${MONTH_ABBR[d.getMonth()]} ${d.getDate()}, ${d.getFullYear()}`;
+  dayDetail.innerHTML = `
+    <div class="detail__header">
+      <button class="detail__back" id="detailBack" type="button"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>Calendar</button>
+      <p class="detail__date">${dateLabel}</p>
+      <h2 class="detail__title">${entry.label}</h2>
+    </div>
+    <div class="detail__body">
+      <div class="detail__section">
+        <p class="detail__section-label">Transportation</p>
+        ${renderTransportSection(entry)}
+      </div>
+      <div class="detail__section">
+        <p class="detail__section-label">Accommodation</p>
+        ${renderStaySection(entry)}
+      </div>
+      <div class="detail__section">
+        <p class="detail__section-label">Sites &amp; reservations</p>
+        ${renderSitesSection(entry)}
+      </div>
+    </div>
+  `;
+}
+
+const mapBack = document.getElementById('mapBack');
+mapBack.addEventListener('click', showCalendarView);
+
+function showDayDetail(dateIso) {
+  renderDayDetail(dateIso);
+  document.querySelector('.panel').classList.add('panel--detail');
+  mapBack.classList.add('is-active');
+  document.getElementById('detailBack').addEventListener('click', showCalendarView);
+  dayDetail.scrollTop = 0;
+}
+function showCalendarView() {
+  document.querySelector('.panel').classList.remove('panel--detail');
+  mapBack.classList.remove('is-active');
+  map.closePopup();
+  const bounds = L.latLngBounds(stops.map(s => s.coord));
+  map.flyToBounds(bounds, { padding: mapFitPadding() });
+}
 
 function renderCalendar() {
   const byDate = Object.fromEntries(days.map(d => [d.date, d]));
@@ -849,7 +1153,14 @@ function renderCalendar() {
     cell.dataset.tag = entry.tag;
     cell.dataset.travel = entry.travel ? 'true' : 'false';
     if (entry.mode) cell.dataset.mode = entry.mode;
-    const trainLines = (entry.legIdx || []).map(i => buildTrainLine(legs[i])).join('');
+    const trainLines = (entry.legIdx || []).map(i => {
+      const leg = legs[i];
+      let html = buildTrainLine(leg);
+      if (leg && leg.retDep) {
+        html += buildTrainLine({ train: leg.retTrain, dep: leg.retDep, arr: leg.retArr, cls: leg.cls });
+      }
+      return html;
+    }).join('');
     cell.innerHTML = `
       <div class="day__head">
         <span class="day__num">${d.getDate()}</span>
@@ -865,6 +1176,7 @@ function renderCalendar() {
       flyToStop(entry.stopId);
       document.querySelectorAll('.day').forEach(el => el.classList.remove('is-active'));
       cell.classList.add('is-active');
+      showDayDetail(entry.date);
     });
     calendarGrid.appendChild(cell);
   }
@@ -874,9 +1186,11 @@ renderMap();
 renderCalendar();
 
 const masthead = document.querySelector('.masthead');
-document.getElementById('calendar').addEventListener('scroll', e => {
+function onPanelScroll(e) {
   masthead.classList.toggle('masthead--compact', e.target.scrollTop > 8);
-}, { passive: true });
+}
+document.getElementById('calendar').addEventListener('scroll', onPanelScroll, { passive: true });
+dayDetail.addEventListener('scroll', onPanelScroll, { passive: true });
 </script>
 </body>
 </html>
